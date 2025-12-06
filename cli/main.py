@@ -1,6 +1,6 @@
 import click
 
-from cli import CustomHelp, ProgressBarSyncManager
+from .utils import CustomHelp, ProgressBarSyncManager
 
 
 @click.group(cls=CustomHelp)
