@@ -4,6 +4,7 @@ from typing import Callable
 class HashComparator:
     pass
 
+
 class DiffFolder:
     def __init__(self, left_hash, right_hash):
         self.left_hash_dict = dict(left_hash)

@@ -1,7 +1,8 @@
 import click
-from fast_sync.main import SyncManager
+
 from cli import echo_files
 from cli.main import fast_sync
+from fast_sync.main import SyncManager
 
 
 @fast_sync.group(help="View missing files in choose folder")

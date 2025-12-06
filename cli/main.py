@@ -1,6 +1,6 @@
 import click
-from fast_sync.main import SyncManager
-from cli import CustomHelp
+
+from cli import CustomHelp, ProgressBarSyncManager
 
 
 @click.group(cls=CustomHelp)
@@ -9,5 +9,5 @@ from cli import CustomHelp
 @click.pass_context
 def fast_sync(ctx, left_folder, right_folder):
     click.secho("Fast sync started", fg='green', bold=True)
-    ctx.obj = SyncManager(left_folder, right_folder)
+    ctx.obj = ProgressBarSyncManager(left_folder, right_folder)
     click.echo("---" * 30)
