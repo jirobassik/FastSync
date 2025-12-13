@@ -1,7 +1,7 @@
 import click
 
-from cli.utils import echo_files
 from cli.main import fast_sync
+from cli.utils import echo_files
 from fast_sync.main import SyncManager
 
 

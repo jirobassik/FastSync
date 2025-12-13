@@ -4,7 +4,7 @@ from cli.main import fast_sync
 from fast_sync.main import SyncManager
 
 
-@fast_sync.group(help="Sync folders")
+@fast_sync.group(help="Sync folders chosen folder")
 def sync():
     pass
 
