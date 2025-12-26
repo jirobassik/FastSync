@@ -1,21 +1,32 @@
 import click
-from loguru import logger
+from logging_config import logger
 
-from .utils import CustomHelp, ProgressBarSyncManager, warning_output
+from fast_sync import FolderReader
+from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import FolderFilterReader
+from fast_sync.utils.error import NotValidFilterInput
+from .utils import CustomHelp, ProgressBarSyncManager, warning_output, error_output
 
 
 @click.group(cls=CustomHelp)
-@click.option('--left-folder', '-left', '-l', type=click.Path(exists=True, file_okay=False))
-@click.option('--right-folder', '-right', '-r', type=click.Path(exists=True, file_okay=False))
+@click.option('--left-folder', '-left', '-l', envvar="LEFT_FOLDER", type=click.Path(exists=True, file_okay=False))
+@click.option('--right-folder', '-right', '-r', envvar="RIGHT_FOLDER", type=click.Path(exists=True, file_okay=False))
+@click.option("--extensions", "-e", default=None, multiple=True, help="Filter files by extension")
+@click.option("--folders", "-f", default=None, multiple=True, help="Exclude files based on folder")
 @click.pass_context
-def fast_sync(ctx, left_folder, right_folder):
+def fast_sync(ctx, left_folder, right_folder, extensions, folders):
     click.echo("---" * 30)
+    click.secho("Fast sync started", fg='green', bold=True)
     try:
-        progress_bar_sync_manager = ProgressBarSyncManager(left_folder, right_folder)
+        reader = FolderReader()
+        if extensions or folders:
+            reader = FolderFilterReader(extensions, folders)
+        progress_bar_sync_manager = ProgressBarSyncManager(left_folder, right_folder, reader)
     except TypeError:
         logger.debug("Empty path input")
         warning_output("Empty path input", fix="view examples 'fast_sync.py --help'")
+    except NotValidFilterInput:
+        logger.debug("Not valid filter input")
+        error_output("Not valid filter input", fix="view examples 'fast_sync.py --help'")
     else:
-        click.secho("Fast sync started", fg='green', bold=True)
         ctx.obj = progress_bar_sync_manager
     click.echo("---" * 30)

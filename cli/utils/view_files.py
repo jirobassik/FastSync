@@ -1,16 +1,9 @@
 import click
 
-
-def line_wrapper(func, num_lines: int = 30):
-    def wrapper(*args, **kwargs):
-        click.echo("---" * num_lines)
-        func(*args, **kwargs)
-        click.echo("---" * num_lines)
-
-    return wrapper
+from cli.utils.line_wrapper import line_wrapper
 
 
-@line_wrapper
+@line_wrapper(type_line="*", num_lines=35)
 def echo_files(files: list):
     if files:
         for file in files:

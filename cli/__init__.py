@@ -1,2 +1,2 @@
-from .groups import missing, sync, filter
+from .groups import missing, sync
 from .utils import *

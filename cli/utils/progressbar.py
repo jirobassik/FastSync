@@ -12,7 +12,7 @@ class ProgressBarHashContentFolder(HashContentFolder):
         with multiprocessing.Pool() as pool:
             with tqdm(desc=f"Creating hash: {pure_path}") as pbar:
                 for result in pool.imap_unordered(
-                    self._hash_path, self._rglob_filter_pattern_files(pure_path)
+                    self._hash_path, self.reader.operation(pure_path)
                 ):
                     results.append(result)
                     pbar.update(1)

@@ -21,10 +21,12 @@ class SyncManager(PathConfig):
     hash_content_folder = HashContentFolder
     folder_sync = FolderSync
 
-    def __init__(self, left_folder, right_folder):
+    def __init__(self, left_folder, right_folder, reader):
         super().__init__(left_folder, right_folder)
-        self.left_hash = self.hash_content_folder().create_hash(self.left_path)
-        self.right_hash = self.hash_content_folder().create_hash(self.right_path)
+        self.hash_content_folder = type(self).hash_content_folder(reader=reader)
+
+        self.left_hash = self.hash_content_folder.create_hash(self.left_path)
+        self.right_hash = self.hash_content_folder.create_hash(self.right_path)
 
         self.diff_folder = DiffFolder(self.left_hash, self.right_hash)
         self.file_sync = self.folder_sync(
