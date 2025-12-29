@@ -5,19 +5,21 @@ from fast_sync import DiffFolder
 
 
 class FolderSync:
-    def __init__(self, left_path, right_path, diff_folder: DiffFolder):
-        self.left_path = left_path
-        self.right_path = right_path
-        self.diff_folder = diff_folder
+    __slots__ = ("_left_path", "_right_path", "_diff_folder")
+
+    def __init__(self, left_path: Path, right_path: Path, diff_folder: DiffFolder):
+        self._left_path = left_path
+        self._right_path = right_path
+        self._diff_folder = diff_folder
 
     def left_sync(self):
-        self._sync(self.right_path, self.left_path, self.diff_folder.missing_left_dict)
+        self._sync(self._right_path, self._left_path, self._diff_folder.missing_left_dict)
 
     def right_sync(self):
-        self._sync(self.left_path, self.right_path, self.diff_folder.missing_right_dict)
+        self._sync(self._left_path, self._right_path, self._diff_folder.missing_right_dict)
 
     def _sync(self, source_folder, destination_folder, missing_files):
-        files_to_copy = list(missing_files.values()) #FIXME Может в будущем аукнуться
+        files_to_copy = missing_files.values()
         for missing_file in files_to_copy:
             self.folder_sync(source_folder, destination_folder, missing_file)
 

@@ -1,19 +1,21 @@
 from pathlib import Path
 
-from fast_sync import DiffFolder, FolderSync, HashContentFolder
+from fast_sync import DiffFolder, FolderSync, HashContentFolder, FolderReader, FolderFilterReader
 
 
 class PathConfig:
+    __slots__ = ("_left_folder", "_right_folder")
+
     def __init__(self, left_folder: str, right_folder: str):
         self._left_folder = Path(left_folder)
         self._right_folder = Path(right_folder)
 
     @property
-    def left_path(self) -> Path:
+    def left_folder(self) -> Path:
         return self._left_folder
 
     @property
-    def right_path(self) -> Path:
+    def right_folder(self) -> Path:
         return self._right_folder
 
 
@@ -21,20 +23,26 @@ class SyncManager(PathConfig):
     hash_content_folder = HashContentFolder
     folder_sync = FolderSync
 
-    def __init__(self, left_folder, right_folder, reader):
+    def __init__(self, left_folder: str, right_folder: str, reader: FolderReader | FolderFilterReader):
         super().__init__(left_folder, right_folder)
-        self.hash_content_folder = type(self).hash_content_folder(reader=reader)
+        self._hash_content_folder = type(self).hash_content_folder(reader=reader)
 
-        self.left_hash = self.hash_content_folder.create_hash(self.left_path)
-        self.right_hash = self.hash_content_folder.create_hash(self.right_path)
+        self._left_hash = self._hash_content_folder.create_hash(self.left_folder)
+        self._right_hash = self._hash_content_folder.create_hash(self.right_folder)
 
-        self.diff_folder = DiffFolder(self.left_hash, self.right_hash)
-        self.file_sync = self.folder_sync(
-            self.left_path, self.right_path, self.diff_folder
+        self._diff_folder = DiffFolder(self._left_hash, self._right_hash)
+        self._folder_sync = type(self).folder_sync(
+            self.left_folder, self.right_folder, self._diff_folder
         )
 
-    def left_missing_paths(self):
-        return self.diff_folder.missing_left_dict.values()
+    def left_missing_files(self):
+        return self._diff_folder.missing_left_dict.values()
 
-    def right_missing_paths(self):
-        return self.diff_folder.missing_right_dict.values()
+    def right_missing_files(self):
+        return self._diff_folder.missing_right_dict.values()
+
+    def left_sync_files(self):
+        self._folder_sync.left_sync()
+
+    def right_sync_files(self):
+        self._folder_sync.right_sync()

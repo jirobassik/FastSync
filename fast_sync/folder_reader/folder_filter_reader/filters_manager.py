@@ -20,14 +20,6 @@ class FilterValues:
     def folders(self) -> set:
         return self._folders
 
-    @extensions.setter
-    def extensions(self, value):
-        self._extensions = set(value)
-
-    @folders.setter
-    def folders(self, value):
-        self._folders = set(value)
-
     @property
     def filters_values(self) -> tuple:
         return self._folders, self._extensions

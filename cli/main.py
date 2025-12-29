@@ -13,7 +13,7 @@ from .utils import CustomHelp, ProgressBarSyncManager, warning_output, error_out
 @click.option("--extensions", "-e", default=None, multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=None, multiple=True, help="Exclude files based on folder")
 @click.pass_context
-def fast_sync(ctx, left_folder, right_folder, extensions, folders):
+def fast_sync_cli(ctx, left_folder, right_folder, extensions, folders):
     click.echo("---" * 30)
     click.secho("Fast sync started", fg='green', bold=True)
     try:
