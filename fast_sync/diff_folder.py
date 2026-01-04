@@ -2,10 +2,6 @@ from pathlib import Path
 from typing import Callable
 
 
-class HashComparator:
-    pass
-
-
 class DiffFolder:
     __slots__ = ("_left_hash_dict", "_right_hash_dict")
 

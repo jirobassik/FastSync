@@ -12,16 +12,7 @@ class FilterValues:
         self._extensions = set(extensions)
         self._folders = set(folders)
 
-    @property
-    def extensions(self) -> set:
-        return self._extensions
-
-    @property
-    def folders(self) -> set:
-        return self._folders
-
-    @property
-    def filters_values(self) -> tuple:
+    def as_filters_values(self) -> tuple:
         return self._folders, self._extensions
 
 
@@ -36,6 +27,6 @@ class FilterContentManager(FilterValues):
         self.setup_filter_data()
 
     def setup_filter_data(self):
-        filters_value_filters = zip(self.filters_values, self.filters)
+        filters_value_filters = zip(self.as_filters_values(), self.filters)
         for filter_data, filter_object in filters_value_filters:
             filter_object.filter_value = filter_data
