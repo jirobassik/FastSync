@@ -9,17 +9,18 @@ class Component(ABC):
         pass
 
 
-class FolderReaderComponent(Component):
+class ReaderComponent(Component, ABC):
     def __init__(self, folder: Path):
         self.folder = folder
+
+
+class FolderReaderComponent(ReaderComponent):
 
     def operation(self):
         return self.folder.iterdir()
 
 
-class FolderRecursiveReaderComponent(Component):
-    def __init__(self, folder: Path):
-        self.folder = folder
+class FolderRecursiveReaderComponent(ReaderComponent):
 
     def operation(self):
         return (file for file in self.folder.rglob(pattern="*") if not file.is_dir())
@@ -27,6 +28,7 @@ class FolderRecursiveReaderComponent(Component):
 
 class FolderDecorator(Component):
     _component: Component = None
+    filter_value = None
 
     def __init__(self, component: Component) -> None:
         self._component = component

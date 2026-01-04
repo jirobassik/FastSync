@@ -2,7 +2,6 @@ from .base import FolderDecorator, FolderReaderComponent
 
 
 class FilterFolders(FolderDecorator):
-    filter_value = None
 
     def operation(self):
         iter_dir = FolderReaderComponent(self.component.folder).operation()
@@ -16,7 +15,6 @@ class FilterFolders(FolderDecorator):
 
 
 class FilterExtensionsFolder(FolderDecorator):
-    filter_value = None
 
     def operation(self):
         for file in self.component.operation():
