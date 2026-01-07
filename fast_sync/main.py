@@ -25,17 +25,19 @@ class SyncManager(PathConfig):
 
     def __init__(self, left_folder: str, right_folder: str, reader: FolderReader | FolderFilterReader):
         super().__init__(left_folder, right_folder)
-        self._hash_content_folder = type(self).hash_content_folder(reader=reader)
+        self._hash_content_folder = type(self).hash_content_folder(reader=reader).calculate_hash(self.left_folder,
+                                                                                                 self.right_folder)
 
-        self._left_hash = self._hash_content_folder.create_hash(self.left_folder)
-        self._right_hash = self._hash_content_folder.create_hash(self.right_folder)
-
-        self._diff_folder = DiffFolder(self._left_hash, self._right_hash)
+        self._diff_folder = DiffFolder(self._hash_content_folder.left_hash, self._hash_content_folder.right_hash)
         self._folder_sync = type(self).folder_sync(
             self.left_folder, self.right_folder, self._diff_folder
         )
 
-    def left_missing_files(self):
+    def update_state(self):
+        self._hash_content_folder.calculate_hash(self.left_folder, self.right_folder)
+        self._diff_folder = DiffFolder(self._hash_content_folder.left_hash, self._hash_content_folder.right_hash)
+
+    def left_missing_files(self, update=False):
         return self._diff_folder.missing_left_dict.values()
 
     def right_missing_files(self):

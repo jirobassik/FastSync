@@ -7,7 +7,7 @@ from fast_sync import HashContentFolder, FolderSync, SyncManager
 
 
 class ProgressBarHashContentFolder(HashContentFolder):
-    def create_hash(self, pure_path: Path) -> list[tuple[str, Path]]:
+    def _create_hash(self, pure_path: Path) -> list[tuple[str, Path]]:
         results = []
         with multiprocessing.Pool() as pool:
             with tqdm(desc=f"Creating hash: {pure_path}") as pbar:
@@ -36,4 +36,4 @@ class ProgressBarFolderSync(FolderSync):
 
 class ProgressBarSyncManager(SyncManager):
     hash_content_folder = ProgressBarHashContentFolder
-    _folder_sync = ProgressBarFolderSync
+    folder_sync = ProgressBarFolderSync
