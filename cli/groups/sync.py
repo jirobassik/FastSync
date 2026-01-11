@@ -1,39 +1,51 @@
 import click
+import click_extra
 
 from cli.main import fast_sync_cli
 from cli.utils import echo_files
 from fast_sync.main import FastSync
 
 
-@fast_sync_cli.group(help="Sync folders chosen folder")
+@fast_sync_cli.group(help="Sync chosen folder")
 @click.pass_context
 def sync(ctx):
     ctx.obj.prepare_sync()
 
 
-# noinspection PyUnresolvedReferences
-@sync.command('left', short_help="Sync left folder with right folder")
-@click.option('--check-sync', is_flag=True, help="Check sync status")
-@click.confirmation_option(prompt='Are you sure you want to sync left folder with right folder?')
-@click.pass_obj
-def sync_left_folder(obj: FastSync, check_sync: bool):
-    click.echo(f"Syncing folder: {obj.left_folder} with {obj.right_folder}")
-    obj.left_sync_files()
-    click.echo(f"{click.style("Successful syncing folder", fg="green")}: {obj.left_folder} with {obj.right_folder}")
-    if check_sync:
-        obj.reanalyze()
-        echo_files(obj.left_missing_files())
+def sync_fabric(direction: str):
+    opposite_direction = "left" if direction == "right" else "right"
+
+    folder = lambda obj, direction_: getattr(obj, f"{direction_}_folder")
+    missing_files = lambda obj: getattr(obj, f"{direction}_missing_files")
+    sync_files = lambda obj: getattr(obj, f"{direction}_sync_files")
+
+    # noinspection PyUnresolvedReferences
+    @sync.command(direction, short_help=f"Sync {direction} folder with {opposite_direction} folder")
+    @click.option('--view-missing', is_flag=True, help="View missing files")
+    @click.option('--check-sync', is_flag=True, help="Check sync status")
+    @click.option('--open-sync-folder', is_flag=True, help=f"Open {direction} folder in file manager")
+    @click.pass_obj
+    def sync_command(obj: FastSync, view_missing: bool, check_sync: bool, open_sync_folder: bool):
+        if view_missing:
+            echo_files(missing_files(obj)())
+
+        if click_extra.confirm(
+                text=f"Are you sure you want to sync {folder(obj, direction).name} with {folder(obj, opposite_direction).name}?",
+                abort=True):
+            click.echo(f"Syncing folder: {folder(obj, direction).name} with {folder(obj, opposite_direction).name}")
+            sync_files(obj)()
+
+            click.echo(
+                f"{click.style("Successful syncing folder", fg="green")}:"
+                f" {folder(obj, direction).name} with {folder(obj, opposite_direction).name}")
+            if check_sync:
+                obj.reanalyze()
+                echo_files(missing_files(obj)())
+            if open_sync_folder:
+                click.launch(folder(obj, direction).absolute().as_uri())
+
+    return sync_command
 
 
-# noinspection PyUnresolvedReferences
-@sync.command('right', short_help="Sync right folder with left folder")
-@click.option('--check-sync', is_flag=True, help="Check sync status")
-@click.confirmation_option(prompt='Are you sure you want to sync right folder with left folder?')
-@click.pass_obj
-def sync_right_folder(obj: FastSync, check_sync: bool):
-    click.echo(f"Syncing folder: {obj.right_folder} with {obj.left_folder}")
-    obj.right_sync_files()
-    click.echo(f"{click.style("Successful syncing folder", fg="green")}: {obj.right_folder} with {obj.left_folder}")
-    if check_sync:
-        obj.reanalyze()
-        echo_files(obj.right_missing_files())
+sync_left_folder = sync_fabric("left")
+sync_right_folder = sync_fabric("right")
