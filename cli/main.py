@@ -1,5 +1,6 @@
 import click
 
+from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync import FolderReader
 from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import FolderFilterReader
 from fast_sync.utils.error import NotValidFilterInput
@@ -14,8 +15,12 @@ from .utils import CustomHelp, ProgressBarFastSync, error_output
               type=click.Path(exists=True, file_okay=False))
 @click.option("--extensions", "-e", default=None, multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=None, multiple=True, help="Exclude files based on folder")
+@click.option("--group", "-g", is_flag=True, help="Group files by folders")
+@click.option("--sort", "-s", is_flag=True, help="Sort files by name")
 @click.pass_context
-def fast_sync_cli(ctx, left_folder, right_folder, extensions, folders):
+def fast_sync_cli(ctx, left_folder, right_folder, extensions, folders, group, sort):
+    ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
+
     click.echo("---" * 30)
     click.secho("Fast sync started", fg='green', bold=True)
     try:
