@@ -1,8 +1,10 @@
 import multiprocessing
+from functools import partial
 from hashlib import md5
 from pathlib import Path
 
 from fast_sync import FolderReader, FolderFilterReader
+from fast_sync.utils.types import ListHashPathKeyValue, HashPathKeyValue
 
 
 class HashValue:
@@ -25,13 +27,16 @@ class HashContentFolder:
         self.right_hash = self._create_hash(right_path)
         return self
 
-    def _create_hash(self, pure_path: Path) -> list[tuple[str, Path]]:
+    def _create_hash(self, path_to_main_folder: Path) -> ListHashPathKeyValue:
         with multiprocessing.Pool() as pool:
+            hash_path_add_path_to_main_folder = partial(self._hash_path, path_to_main_folder=path_to_main_folder)
             iter_hashes = pool.map(
-                self._hash_path, self._reader.operation(pure_path)
+                hash_path_add_path_to_main_folder, self._reader.operation(path_to_main_folder)
             )
         return iter_hashes
 
     @staticmethod
-    def _hash_path(byte_file: Path) -> tuple[str, Path]:
-        return md5(byte_file.read_bytes()).hexdigest(), byte_file
+    def _hash_path(path_to_file: Path, path_to_main_folder: Path) -> HashPathKeyValue:
+        key = (md5(path_to_file.read_bytes()).hexdigest(), path_to_file.relative_to(path_to_main_folder))
+        value = path_to_file
+        return key, value

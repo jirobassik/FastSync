@@ -1,11 +1,12 @@
-from pathlib import Path
 from typing import Callable
+
+from fast_sync.utils.types import ListHashPathKeyValue
 
 
 class DiffFolder:
     __slots__ = ("_left_hash_dict", "_right_hash_dict")
 
-    def __init__(self, left_hash: list[tuple[str, Path]], right_hash: list[tuple[str, Path]]):
+    def __init__(self, left_hash: ListHashPathKeyValue, right_hash: ListHashPathKeyValue):
         self._left_hash_dict = dict(left_hash)
         self._right_hash_dict = dict(right_hash)
 

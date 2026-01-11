@@ -1,18 +1,21 @@
 import multiprocessing
+from functools import partial
 from pathlib import Path
 
 from tqdm import tqdm
 
 from fast_sync import HashContentFolder, FolderSync, FastSync
+from fast_sync.utils.types import ListHashPathKeyValue
 
 
 class ProgressBarHashContentFolder(HashContentFolder):
-    def _create_hash(self, pure_path: Path) -> list[tuple[str, Path]]:
+    def _create_hash(self, path_to_main_folder: Path) -> ListHashPathKeyValue:
         results = []
         with multiprocessing.Pool() as pool:
-            with tqdm(desc=f"Creating hash: {pure_path}") as pbar:
+            with tqdm(desc=f"Creating hash: {path_to_main_folder}") as pbar:
+                hash_path_add_path_to_main_folder = partial(self._hash_path, path_to_main_folder=path_to_main_folder)
                 for result in pool.imap_unordered(
-                        self._hash_path, self._reader.operation(pure_path)
+                        hash_path_add_path_to_main_folder, self._reader.operation(path_to_main_folder)
                 ):
                     results.append(result)
                     pbar.update(1)
@@ -21,7 +24,7 @@ class ProgressBarHashContentFolder(HashContentFolder):
 
 class ProgressBarFolderSync(FolderSync):
     def _sync(self, source_folder, destination_folder, missing_files):
-        files_to_copy = list(missing_files.values())
+        files_to_copy = missing_files.values()
         progressbar_missing_files = tqdm(
             files_to_copy,
             total=len(files_to_copy),

@@ -30,7 +30,7 @@ def sync_left_folder(obj: FastSync, check_sync: bool):
 @click.option('--check-sync', is_flag=True, help="Check sync status")
 @click.confirmation_option(prompt='Are you sure you want to sync right folder with left folder?')
 @click.pass_obj
-def sync_right_folder(obj: FastSync):
+def sync_right_folder(obj: FastSync, check_sync: bool):
     click.echo(f"Syncing folder: {obj.right_folder} with {obj.left_folder}")
     obj.right_sync_files()
     click.echo(f"{click.style("Successful syncing folder", fg="green")}: {obj.right_folder} with {obj.left_folder}")
