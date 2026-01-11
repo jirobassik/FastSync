@@ -12,8 +12,17 @@ class FilterValues:
         self._extensions = set(extensions)
         self._folders = set(folders)
 
+    @property
+    def extensions(self):
+        for extension in self._extensions:
+            if not extension.startswith("."):
+                self._extensions.remove(extension)
+                self._extensions.add("." + extension)
+
+        return self._extensions
+
     def as_filters_values(self) -> tuple:
-        return self._folders, self._extensions
+        return self._folders, self.extensions
 
 
 class FilterContentManager(FilterValues):
