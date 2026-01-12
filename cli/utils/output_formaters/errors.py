@@ -1,0 +1,2 @@
+class OutputFormaterError(Exception):
+    pass

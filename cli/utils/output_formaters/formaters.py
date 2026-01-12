@@ -11,13 +11,14 @@ def echo_files(files: list):
     for file in files:
         click.echo(file.name)
 
-@line_wrapper(type_line="*", num_lines=35)
-def sorted_output(dict_values_missing: list[Path]):
-    echo_files(sorted(dict_values_missing))
+
+def sorted_output(missing_files: list[Path]):
+    echo_files(sorted(missing_files))
+
 
 @group_line_wrapper(type_line="─", num_lines=100)
-def grouped_output(dict_values_missing: list[Path], folder):
-    sorted_paths = sorted(dict_values_missing, key=lambda x: x.parent)
+def grouped_output(missing_files: list[Path], folder):
+    sorted_paths = sorted(missing_files, key=lambda x: x.parent)
     # Группируем по родительским папкам
     for parent, group in groupby(sorted_paths, key=lambda x: x.parent):
         # Получаем уровень вложенности

@@ -2,6 +2,7 @@ from pathlib import Path
 
 import click
 
+from cli.utils.output_formaters.errors import OutputFormaterError
 from cli.utils.output_formaters.formaters import grouped_output, echo_files, sorted_output
 
 
@@ -11,14 +12,34 @@ class OutputFormater:
         self.sorted_ = sorted_
         self.grouped = grouped
 
-    def __call__(self, dict_values_missing: list[Path], folder=None):
-        if dict_values_missing:
-            click.secho(f"Total missing 📄: {len(dict_values_missing)}", fg="yellow")
-            if self.sorted_:
-                sorted_output(dict_values_missing)
-            if self.grouped:
-                grouped_output(dict_values_missing, folder)
-            elif not self.grouped and not self.sorted_:
-                echo_files(dict_values_missing)
-        else:
-            click.secho("No missing files", fg="green")
+    def __call__(self, missing_files: list[Path], missing_folder: Path, reference_folder: Path = None):
+        if not missing_files:
+            click.secho(f"✅  No missing files found in {missing_folder.name}", fg="green")
+            return
+
+        self._summary_missing_output(missing_files)
+        self._chooser_output(missing_files, missing_folder.name, reference_folder)
+
+    def _chooser_output(self, missing_files: list[Path], missing_folder, reference_folder):
+        click.secho(f"\n📄  Missing files in {missing_folder}:", fg="yellow")
+        if self.sorted_:
+            sorted_output(missing_files)
+        if self.grouped:
+            self._grouped_output(missing_files, reference_folder)
+        elif not self.grouped and not self.sorted_:
+            echo_files(missing_files)
+
+    @staticmethod
+    def _summary_missing_output(missing_files: list[Path]):
+        click.secho(f"📊 Total missing files: {len(missing_files)}",
+                    fg="yellow", bold=True)
+
+    @staticmethod
+    def _grouped_output(missing_files: list[Path], reference_folder):
+        if reference_folder is None:
+            raise OutputFormaterError("Reference folder not provided")
+        grouped_output(missing_files, reference_folder)
+
+
+def meta_output_formater() -> OutputFormater:
+    return click.get_current_context().meta.get("output_formater")
