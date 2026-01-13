@@ -1,8 +1,10 @@
+from itertools import chain
+
 import click
 import click_extra
 
 from cli.main import fast_sync_cli
-from cli.utils.output_formaters.output_formater import meta_output_formater
+from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.main import FastSync
 
 
@@ -12,48 +14,74 @@ def sync(ctx):
     ctx.obj.prepare_sync()
 
 
-def sync_fabric(direction: str):
-    opposite_direction = "left" if direction == "right" else "right"
+class SyncFabric:
+    def __init__(self, direction: str):
+        self._direction = direction
+        self._opposite_direction = "left" if direction == "right" else "right"
 
-    folder = lambda obj, direction_: getattr(obj, f"{direction_}_folder")
-    missing_files = lambda obj: getattr(obj, f"{direction}_missing_files")
-    sync_files = lambda obj: getattr(obj, f"{direction}_sync_files")
+        self._folder = lambda direction_: getattr(self._obj, f"{direction_}_folder")
+        self._missing_files = lambda: getattr(self._obj, f"{direction}_missing_files")()
+        self._sync_files = lambda: getattr(self._obj, f"{direction}_sync_files")()
 
-    # noinspection PyUnresolvedReferences
-    @sync.command(direction, short_help=f"Sync {direction} folder with {opposite_direction} folder")
-    @click.option('--view-missing', is_flag=True, help="View missing files")
-    @click.option('--check-sync', is_flag=True, help="Check sync status")
-    @click.option('--open-sync-folder', is_flag=True, help=f"Open {direction} folder in file manager")
-    @click.pass_obj
-    def sync_command(obj: FastSync, view_missing: bool, check_sync: bool, open_sync_folder: bool):
-        if view_missing:
-            meta_output_formater()(missing_files=missing_files(obj)(),
-                                   missing_folder=folder(obj, direction),
-                                   reference_folder=folder(obj, opposite_direction))
+        self._required_operations = {"sync_files": self._sync_files_wrap}
+        self._optional_operations = {"check_sync": self._recheck_sync, "open_sync_folder": self._open_sync_folder}
+        self._all_operations = self._required_operations | self._optional_operations
 
-        if click_extra.confirm(
-                text=f"Are you sure you want to sync {folder(obj, direction).name} with {folder(obj, opposite_direction).name}?",
-                abort=True):
-            click.echo(f"Syncing folder: {folder(obj, opposite_direction).name} ⟹  {folder(obj, direction).name}")
+        self._obj = None
+        self._output_formater = None
 
-            sync_files(obj)()
+    def create(self):
+        # noinspection PyUnresolvedReferences
+        @sync.command(self._direction,
+                      short_help=f"Sync {self._direction} folder with {self._opposite_direction} folder")
+        @click.option('--view-missing', is_flag=True, help="View missing files")
+        @click.option('--check-sync', flag_value='check_sync', help="Check sync status")
+        @click.option('--open-sync-folder', flag_value='open_sync_folder',
+                      help=f"Open {self._direction} folder in file manager")
+        @click.decorators.pass_meta_key("output_formater")
+        @click.pass_obj
+        def sync_dec(obj: FastSync, output_formater: OutputFormater, view_missing: bool, check_sync: str,
+                     open_sync_folder: str):
+            self._obj = obj
+            self._output_formater = output_formater
 
-            click.echo(
-                f"{click.style("Successful syncing folder", fg="green")}:"
-                f" {folder(obj, direction).name} with {folder(obj, opposite_direction).name}")
+            if view_missing:
+                self._view_missing_files()
 
-            if check_sync:
-                obj.reanalyze()
-                click.echo(f"Repeat check 📄 in folder: {folder(obj, direction).name}")
-                meta_output_formater()(missing_files=missing_files(obj)(),
-                                       missing_folder=folder(obj, direction),
-                                       reference_folder=folder(obj, opposite_direction))
+            if click_extra.confirm(
+                    text=f"Are you sure you want to sync {self._folder(self._direction).name} with {self._folder(self._opposite_direction).name}?",
+                    abort=True):
+                self._after_confirm_operations(check_sync, open_sync_folder)
 
-            if open_sync_folder:
-                click.launch(folder(obj, direction).absolute().as_uri())
+        return sync_dec
 
-    return sync_command
+    def _view_missing_files(self):
+        self._output_formater(missing_files=self._missing_files(),
+                              missing_folder=self._folder(self._direction),
+                              reference_folder=self._folder(self._opposite_direction))
+
+    def _after_confirm_operations(self, *args):
+        extend_args = chain(self._required_operations.keys(), args)
+        for operation in extend_args:
+            if (call_operation := self._all_operations.get(operation)) is not None:
+                call_operation()
+
+    def _sync_files_wrap(self):
+        click.echo(
+            f"Syncing folder: {self._folder(self._opposite_direction).name} ⟹  {self._folder(self._direction).name}")
+        self._sync_files()
+        click.echo(
+            f"{click.style("Successful syncing folder", fg="green")}:"
+            f" {self._folder(self._direction).name} with {self._folder(self._opposite_direction).name}")
+
+    def _recheck_sync(self):
+        self._obj.reanalyze()
+        click.echo(f"Repeat check 📄 in folder: {self._folder(self._direction).name}")
+        self._view_missing_files()
+
+    def _open_sync_folder(self):
+        click.launch(self._folder(self._direction).absolute().as_uri())
 
 
-sync_left_folder = sync_fabric("left")
-sync_right_folder = sync_fabric("right")
+sync_left_folder = SyncFabric("left").create()
+sync_right_folder = SyncFabric("right").create()

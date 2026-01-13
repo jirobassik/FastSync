@@ -39,7 +39,3 @@ class OutputFormater:
         if reference_folder is None:
             raise OutputFormaterError("Reference folder not provided")
         grouped_output(missing_files, reference_folder)
-
-
-def meta_output_formater() -> OutputFormater:
-    return click.get_current_context().meta.get("output_formater")
