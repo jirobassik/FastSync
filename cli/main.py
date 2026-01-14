@@ -2,6 +2,7 @@ import click
 
 from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync import FolderReader
+from fast_sync.folder_reader.folder_filter_reader import FilterFolders, FilterExtensionsFolder
 from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import FolderFilterReader
 from fast_sync.utils.error import NotValidFilterInput
 from logging_config import logger
@@ -26,7 +27,8 @@ def fast_sync_cli(ctx, left_folder, right_folder, group, sort, extensions, folde
     try:
         reader = FolderReader()
         if extensions or folders:
-            reader = FolderFilterReader(extensions, folders)
+            reader = FolderFilterReader(FilterFolders(*folders), FilterExtensionsFolder(*extensions))
+
         progress_bar_sync_manager = ProgressBarFastSync(left_folder, right_folder, reader)
         progress_bar_sync_manager.analyze()
     except NotValidFilterInput:
