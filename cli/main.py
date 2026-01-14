@@ -13,12 +13,12 @@ from .utils import CustomHelp, ProgressBarFastSync, error_output
               type=click.Path(exists=True, file_okay=False))
 @click.option('--right-folder', '-right', '-r', required=True, envvar="RIGHT_FOLDER",
               type=click.Path(exists=True, file_okay=False))
-@click.option("--extensions", "-e", default=None, multiple=True, help="Filter files by extension")
-@click.option("--folders", "-f", default=None, multiple=True, help="Exclude files based on folder")
 @click.option("--group", "-g", is_flag=True, help="Group files by folders")
 @click.option("--sort", "-s", is_flag=True, help="Sort files by name")
+@click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
+@click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
 @click.pass_context
-def fast_sync_cli(ctx, left_folder, right_folder, extensions, folders, group, sort):
+def fast_sync_cli(ctx, left_folder, right_folder, group, sort, extensions, folders):
     ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
 
     click.echo("---" * 30)

@@ -29,6 +29,7 @@ class FolderRecursiveReaderComponent(ReaderComponent):
 class FolderDecorator(Component):
     _component: Component = None
     filter_value = None
+    filter_name = None
 
     def __init__(self, component: Component) -> None:
         self._component = component
