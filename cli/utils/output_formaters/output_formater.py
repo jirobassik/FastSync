@@ -3,7 +3,7 @@ from pathlib import Path
 import click
 
 from cli.utils.output_formaters.errors import OutputFormaterError
-from cli.utils.output_formaters.formaters import grouped_output, echo_files, sorted_output
+from cli.utils.output_formaters.formaters import grouped_output, echo_files, sorted_output, white_bolt_text
 
 
 class OutputFormater:
@@ -14,14 +14,14 @@ class OutputFormater:
 
     def __call__(self, missing_files: list[Path], missing_folder: Path, reference_folder: Path = None):
         if not missing_files:
-            click.secho(f"✅  No missing files found in {missing_folder.name}", fg="green")
+            click.secho(f"\n🗹  No missing files found in {white_bolt_text(missing_folder.name)}", fg="green")
             return
 
         self._summary_missing_output(missing_files)
         self._chooser_output(missing_files, missing_folder.name, reference_folder)
 
     def _chooser_output(self, missing_files: list[Path], missing_folder, reference_folder):
-        click.secho(f"\n📄  Missing files in {missing_folder}:", fg="yellow")
+        click.secho(f"\n🚫  Missing files in {white_bolt_text(missing_folder)}:", fg="yellow")
         if self.sorted_:
             sorted_output(missing_files)
         if self.grouped:
@@ -31,7 +31,7 @@ class OutputFormater:
 
     @staticmethod
     def _summary_missing_output(missing_files: list[Path]):
-        click.secho(f"📊 Total missing files: {len(missing_files)}",
+        click.secho(f"📊  Total missing files: {white_bolt_text(len(missing_files))}",
                     fg="yellow", bold=True)
 
     @staticmethod

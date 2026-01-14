@@ -16,6 +16,10 @@ def sorted_output(missing_files: list[Path]):
     echo_files(sorted(missing_files))
 
 
+def white_bolt_text(text: str | int):
+    return click.style(text, fg="white", bold=True)
+
+
 @group_line_wrapper(type_line="─", num_lines=100)
 def grouped_output(missing_files: list[Path], folder):
     sorted_paths = sorted(missing_files, key=lambda x: x.parent)

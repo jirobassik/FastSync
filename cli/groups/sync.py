@@ -4,6 +4,7 @@ import click
 import click_extra
 
 from cli.main import fast_sync_cli
+from cli.utils.output_formaters.formaters import white_bolt_text
 from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.main import FastSync
 
@@ -49,7 +50,8 @@ class SyncFabric:
                 self._view_missing_files()
 
             if click_extra.confirm(
-                    text=f"Are you sure you want to sync {self._folder(self._direction).name} with {self._folder(self._opposite_direction).name}?",
+                    text=f"Are you sure you want to sync {white_bolt_text(self._folder(self._direction).name)} with "
+                         f"{white_bolt_text(self._folder(self._opposite_direction).name)}?",
                     abort=True):
                 self._after_confirm_operations(check_sync, open_sync_folder)
 
@@ -67,16 +69,19 @@ class SyncFabric:
                 call_operation()
 
     def _sync_files_wrap(self):
-        click.echo(
-            f"Syncing folder: {self._folder(self._opposite_direction).name} ⟹  {self._folder(self._direction).name}")
+        click.secho(
+            f"\n🔄  Syncing folders: {white_bolt_text(self._folder(self._opposite_direction).name)}  ⟹  "
+            f"{white_bolt_text(self._folder(self._direction).name)}", fg="yellow")
         self._sync_files()
         click.echo(
-            f"{click.style("Successful syncing folder", fg="green")}:"
-            f" {self._folder(self._direction).name} with {self._folder(self._opposite_direction).name}")
+            f"{click.style("Successful syncing folders", fg="green")}: "
+            f"{click.style(self._folder(self._direction).name, fg="white", bold=True)} with "
+            f"{click.style(self._folder(self._opposite_direction).name, fg="white", bold=True)}")
 
     def _recheck_sync(self):
+        click.secho(f"\n🔁  Repeat check in folder: {white_bolt_text(click.style(self._folder(self._direction).name))}",
+                    fg="yellow")
         self._obj.reanalyze()
-        click.echo(f"Repeat check 📄 in folder: {self._folder(self._direction).name}")
         self._view_missing_files()
 
     def _open_sync_folder(self):
