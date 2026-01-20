@@ -33,16 +33,34 @@ class SyncFabric:
 
     def create(self):
         # noinspection PyUnresolvedReferences
-        @sync.command(self._direction,
-                      short_help=f"Sync {self._direction} folder with {self._opposite_direction} folder")
-        @click.option('--view-missing', is_flag=True, help="View missing files")
-        @click.option('--check-sync', flag_value='check_sync', help="Check sync status")
-        @click.option('--open-sync-folder', flag_value='open_sync_folder',
-                      help=f"Open {self._direction} folder in file manager")
+        @sync.command(
+            self._direction,
+            short_help=f"Sync {self._direction} folder with {self._opposite_direction} folder",
+        )
+        @click.option(
+            "--view-missing",
+            is_flag=True,
+            help="View missing files",
+        )
+        @click.option(
+            "--check-sync",
+            flag_value="check_sync",
+            help="Check sync status",
+        )
+        @click.option(
+            "--open-sync-folder",
+            flag_value="open_sync_folder",
+            help=f"Open {self._direction} folder in file manager",
+        )
         @click.decorators.pass_meta_key("output_formater")
         @click.pass_obj
-        def sync_dec(obj: FastSync, output_formater: OutputFormater, view_missing: bool, check_sync: str,
-                     open_sync_folder: str):
+        def sync_dec(
+            obj: FastSync,
+            output_formater: OutputFormater,
+            view_missing: bool,
+            check_sync: str,
+            open_sync_folder: str,
+        ):
             self._obj = obj
             self._output_formater = output_formater
 
@@ -50,17 +68,21 @@ class SyncFabric:
                 self._view_missing_files()
 
             if click_extra.confirm(
-                    text=f"Are you sure you want to sync {white_bolt_text(self._folder(self._direction).name)} with "
-                         f"{white_bolt_text(self._folder(self._opposite_direction).name)}?",
-                    abort=True):
+                text=f"Are you sure you want to sync "
+                f"{white_bolt_text(self._folder(self._direction).name)} with "
+                f"{white_bolt_text(self._folder(self._opposite_direction).name)}?",
+                abort=True,
+            ):
                 self._after_confirm_operations(check_sync, open_sync_folder)
 
         return sync_dec
 
     def _view_missing_files(self):
-        self._output_formater(missing_files=self._missing_files(),
-                              missing_folder=self._folder(self._direction),
-                              reference_folder=self._folder(self._opposite_direction))
+        self._output_formater(
+            missing_files=self._missing_files(),
+            missing_folder=self._folder(self._direction),
+            reference_folder=self._folder(self._opposite_direction),
+        )
 
     def _after_confirm_operations(self, *args):
         extend_args = chain(self._required_operations.keys(), args)
@@ -70,17 +92,24 @@ class SyncFabric:
 
     def _sync_files_wrap(self):
         click.secho(
-            f"\n🔄  Syncing folders: {white_bolt_text(self._folder(self._opposite_direction).name)}  ⟹  "
-            f"{white_bolt_text(self._folder(self._direction).name)}", fg="yellow")
+            f"\n🔄  Syncing folders: "
+            f"{white_bolt_text(self._folder(self._opposite_direction).name)}  ⟹  "
+            f"{white_bolt_text(self._folder(self._direction).name)}",
+            fg="yellow",
+        )
         self._sync_files()
         click.echo(
-            f"{click.style("Successful syncing folders", fg="green")}: "
-            f"{click.style(self._folder(self._direction).name, fg="white", bold=True)} with "
-            f"{click.style(self._folder(self._opposite_direction).name, fg="white", bold=True)}")
+            f"{click.style('Successful syncing folders', fg='green')}: "
+            f"{click.style(self._folder(self._direction).name, fg='white', bold=True)} with "
+            f"{click.style(self._folder(self._opposite_direction).name, fg='white', bold=True)}"
+        )
 
     def _recheck_sync(self):
-        click.secho(f"\n🔁  Repeat check in folder: {white_bolt_text(click.style(self._folder(self._direction).name))}",
-                    fg="yellow")
+        click.secho(
+            f"\n🔁  Repeat check in folder: "
+            f"{white_bolt_text(click.style(self._folder(self._direction).name))}",
+            fg="yellow",
+        )
         self._obj.reanalyze()
         self._view_missing_files()
 

@@ -13,10 +13,18 @@ class FolderSync:
         self._diff_folder = diff_folder
 
     def left_sync(self):
-        self._sync(self._right_path, self._left_path, self._diff_folder.missing_files_in_left_folder)
+        self._sync(
+            self._right_path,
+            self._left_path,
+            self._diff_folder.missing_files_in_left_folder,
+        )
 
     def right_sync(self):
-        self._sync(self._left_path, self._right_path, self._diff_folder.missing_files_in_right_folder)
+        self._sync(
+            self._left_path,
+            self._right_path,
+            self._diff_folder.missing_files_in_right_folder,
+        )
 
     def _sync(self, source_folder, destination_folder, missing_files):
         files_to_copy = missing_files.values()

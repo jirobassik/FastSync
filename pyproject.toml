@@ -1,0 +1,20 @@
+[project]
+name = "fastsync"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "click>=8.3.1",
+    "click-extra>=7.4.0",
+    "loguru>=0.7.3",
+    "tqdm>=4.67.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "pytest-unordered>=0.7.0",
+    "ruff>=0.14.13",
+]
+

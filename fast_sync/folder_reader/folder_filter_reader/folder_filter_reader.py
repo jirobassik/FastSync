@@ -12,4 +12,3 @@ class FolderFilterReader:
                 folder_reader = filter_object(folder_reader)
         filtered_folder_content = folder_reader.operation()
         return filtered_folder_content
-

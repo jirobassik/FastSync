@@ -19,7 +19,6 @@ class FilterFolders(FolderDecorator):
 
 
 class FilterExtensionsFolder(FolderDecorator):
-
     def operation(self):
         for file in self.component.operation():
             if file.suffix in self.filter_values:

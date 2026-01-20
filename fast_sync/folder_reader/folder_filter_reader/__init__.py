@@ -1,4 +1,4 @@
-from .base import FolderRecursiveReaderComponent, FolderReaderComponent, FolderDecorator
+from .base import FolderDecorator, FolderReaderComponent, FolderRecursiveReaderComponent
 from .filters import FilterExtensionsFolder, FilterFolders
 from .folder_filter_reader import FolderFilterReader
 

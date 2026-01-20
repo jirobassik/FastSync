@@ -3,7 +3,6 @@ from pathlib import Path
 
 
 class Component(ABC):
-
     @abstractmethod
     def operation(self):
         pass
@@ -15,13 +14,11 @@ class ReaderComponent(Component, ABC):
 
 
 class FolderReaderComponent(ReaderComponent):
-
     def operation(self):
         return self.folder.iterdir()
 
 
 class FolderRecursiveReaderComponent(ReaderComponent):
-
     def operation(self):
         return (file for file in self.folder.rglob(pattern="*") if not file.is_dir())
 

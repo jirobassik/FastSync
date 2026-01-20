@@ -1,0 +1,15 @@
+[pytest]
+minversion = "9.0"
+testpaths = ["tests"]
+pythonpath = ["fast_sync"]
+python_files = ["test_*.py", "*_test.py"]
+python_functions = ["test_*"]
+addopts = [
+    "-vv", # подробный вывод хода теста
+    "--import-mode=importlib"    # меньше проблем с импортами
+]
+markers = [
+    "slow: долгие тесты",
+    "integration: интеграционные тесты",
+    "unittest: модульные тесты"
+]

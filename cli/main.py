@@ -2,10 +2,16 @@ import click
 
 from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync import FolderReader
-from fast_sync.folder_reader.folder_filter_reader import FilterFolders, FilterExtensionsFolder
-from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import FolderFilterReader
+from fast_sync.folder_reader.folder_filter_reader import (
+    FilterExtensionsFolder,
+    FilterFolders,
+)
+from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import (
+    FolderFilterReader,
+)
 from fast_sync.utils.error import NotValidFilterInput
 from logging_config import logger
+
 from .utils import CustomHelp, ProgressBarFastSync, error_output
 
 
@@ -23,17 +29,26 @@ def fast_sync_cli(ctx, left_folder, right_folder, group, sort, extensions, folde
     ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
 
     click.echo("---" * 30)
-    click.secho("Fast sync started", fg='green', bold=True)
+    click.secho("Fast sync started", fg="green", bold=True)
     try:
         reader = FolderReader()
         if extensions or folders:
-            reader = FolderFilterReader(FilterFolders(*folders), FilterExtensionsFolder(*extensions))
+            reader = FolderFilterReader(
+                FilterFolders(*folders),
+                FilterExtensionsFolder(*extensions),
+            )
 
-        progress_bar_sync_manager = ProgressBarFastSync(left_folder, right_folder, reader)
+        progress_bar_sync_manager = ProgressBarFastSync(
+            left_folder,
+            right_folder,
+            reader,
+        )
         progress_bar_sync_manager.analyze()
     except NotValidFilterInput:
         logger.debug("Not valid filter input")
-        error_output("Not valid filter input", fix="view examples 'fast_sync.py --help'")
+        error_output(
+            "Not valid filter input", fix="view examples 'fast_sync.py --help'"
+        )
     else:
         ctx.obj = progress_bar_sync_manager
     click.echo("---" * 30)
