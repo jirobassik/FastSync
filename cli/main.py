@@ -20,8 +20,8 @@ from .utils import CustomHelp, ProgressBarFastSync, error_output
               type=click.Path(exists=True, file_okay=False))
 @click.option('--right-folder', '-right', '-r', required=True, envvar="RIGHT_FOLDER",
               type=click.Path(exists=True, file_okay=False))
-@click.option("--group", "-g", is_flag=True, help="Group files by folders")
-@click.option("--sort", "-s", is_flag=True, help="Sort files by name")
+@click.option("--group", "-g", is_flag=True, help="Group files by folders [Affects the output format]")
+@click.option("--sort", "-s", is_flag=True, help="Sort files by name [Affects the output format]")
 @click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
 @click.pass_context
