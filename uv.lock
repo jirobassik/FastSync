@@ -150,6 +150,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
+    { name = "pytest-datafiles" },
     { name = "pytest-unordered" },
     { name = "ruff" },
 ]
@@ -165,6 +166,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "pytest", specifier = ">=9.0.2" },
+    { name = "pytest-datafiles", specifier = ">=3.0.1" },
     { name = "pytest-unordered", specifier = ">=0.7.0" },
     { name = "ruff", specifier = ">=0.14.13" },
 ]
@@ -241,6 +243,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/d1/db/7ef3487e0fb0049ddb5ce41d3a49c235bf9ad299b6a25d5780a89f19230f/pytest-9.0.2.tar.gz", hash = "sha256:75186651a92bd89611d1d9fc20f0b4345fd827c41ccd5c299a868a05d70edf11", size = 1568901, upload-time = "2025-12-06T21:30:51.014Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3b/ab/b3226f0bd7cdcf710fbede2b3548584366da3b19b5021e74f5bde2a8fa3f/pytest-9.0.2-py3-none-any.whl", hash = "sha256:711ffd45bf766d5264d487b917733b453d917afd2b0ad65223959f59089f875b", size = 374801, upload-time = "2025-12-06T21:30:49.154Z" },
+]
+
+[[package]]
+name = "pytest-datafiles"
+version = "3.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pytest" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fc/8d/081ba12c1ea4eb1b899eb61b4501136c233492280fdb70343edcdfdf26ce/pytest_datafiles-3.0.1.tar.gz", hash = "sha256:05fc3eef2429fe26ae42283cccb1f3831b53b12d4bd8b4734bf42973d4af6e16", size = 222220, upload-time = "2026-01-04T15:08:23.287Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/23/88880d5dc36eac9696ad40823e37c1fdbfa81a67b9cfd0ed445b3ed7ec54/pytest_datafiles-3.0.1-py3-none-any.whl", hash = "sha256:c48f27a8afec03a482a10587ab5f5ab930ced4cbdeb2e3a2cbcc0323a51d22c7", size = 6357, upload-time = "2026-01-04T15:08:25.132Z" },
 ]
 
 [[package]]

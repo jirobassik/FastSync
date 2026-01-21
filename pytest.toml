@@ -6,10 +6,12 @@ python_files = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 addopts = [
     "-vv", # подробный вывод хода теста
-    "--import-mode=importlib"    # меньше проблем с импортами
 ]
 markers = [
     "slow: долгие тесты",
     "integration: интеграционные тесты",
-    "unittest: модульные тесты"
+    "unittest: модульные тесты",
+    "little: тесты с папками маленького размера",
+    "big: тесты с папками большого размера",
+    "filters: тесты с фильтрами для файлов"
 ]

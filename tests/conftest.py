@@ -1,47 +1,69 @@
 import pytest
-from fixtures import *  # noqa: F403
 
+from fast_sync import FolderFilterReader
 from fast_sync.folder_reader import FolderReader
+from fast_sync.folder_reader.folder_filter_reader import (
+    FilterExtensionsFolder,
+    FilterFolders,
+)
 from fast_sync.main import FastSync
+from tests.fixtures import *  # noqa: F403
+
+
+@pytest.fixture(scope="session")
+def default_fast_sync_fabric():
+    def _default_fast_sync_fabric(left_folder, right_folder):
+        reader = FolderReader()
+        fast_sync = FastSync(left_folder, right_folder, reader)
+        fast_sync.analyze()
+        return fast_sync
+
+    return _default_fast_sync_fabric
+
+
+@pytest.fixture(scope="session")
+def filter_reader_fast_sync_fabric():
+    def _filter_reader_fast_sync_fabric(
+        left_folder,
+        right_folder,
+        folders: tuple,
+        extensions: tuple,
+    ):
+        reader = FolderFilterReader(
+            FilterFolders(*folders),
+            FilterExtensionsFolder(*extensions),
+        )
+        fast_sync = FastSync(left_folder, right_folder, reader)
+        fast_sync.analyze()
+        return fast_sync
+
+    return _filter_reader_fast_sync_fabric
 
 
 @pytest.fixture(scope="session")
 def fast_sync_simple_folder_default_reader(
-    create_base_folder,
-    simple_folder_structure1,
-    simple_folder_structure2,
-    fill_folder_content,
+    default_fast_sync_fabric,
+    left_folder_simple,
+    right_folder_simple,
 ):
-    left_folder = fill_folder_content(
-        create_base_folder("base_folder1"), simple_folder_structure1
-    )
-    right_folder = fill_folder_content(
-        create_base_folder("base_folder2"), simple_folder_structure2
-    )
-
-    reader = FolderReader()
-    fast_sync = FastSync(left_folder, right_folder, reader)
-    fast_sync.analyze()
-    return fast_sync
-
+    return default_fast_sync_fabric(left_folder_simple, right_folder_simple)
 
 
 @pytest.fixture(scope="session")
-def fast_sync_nested_simple_folder_default_reader(
-    create_base_folder,
-    nested_simple_folder_structure1,
-    simple_folder_structure2,
-    fill_folder_content,
+def fast_sync_left_nested_simple_folder_default_reader(
+    default_fast_sync_fabric,
+    left_folder_nested_simple,
+    right_folder_simple,
 ):
-    left_folder = fill_folder_content(
-        create_base_folder("base_folder1"), nested_simple_folder_structure1
-    )
-    right_folder = fill_folder_content(
-        create_base_folder("base_folder2"), simple_folder_structure2
-    )
+    return default_fast_sync_fabric(left_folder_nested_simple, right_folder_simple)
 
-    reader = FolderReader()
-    fast_sync = FastSync(left_folder, right_folder, reader)
-    fast_sync.analyze()
-    return fast_sync
 
+@pytest.fixture(scope="session")
+def fast_sync_all_nested_simple_folder_default_reader(
+    default_fast_sync_fabric,
+    left_folder_nested_simple,
+    right_folder_nested_simple,
+):
+    return default_fast_sync_fabric(
+        left_folder_nested_simple, right_folder_nested_simple
+    )

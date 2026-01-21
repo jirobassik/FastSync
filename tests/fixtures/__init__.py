@@ -1,15 +1,29 @@
-from fixtures.fixtures_folder import (
+from tests.fixtures.fixtures_folder_content import (
+    left_folder_nested_simple_structure,
+    left_folder_simple_structure,
+    right_folder_nested_simple_structure,
+    right_folder_simple_structure,
+)
+from tests.fixtures.fixtures_folder_creation import (
     create_base_folder,
     fill_folder_content,
-    nested_simple_folder_structure1,
-    simple_folder_structure1,
-    simple_folder_structure2,
+    filled_folder_factory,
+    left_folder_nested_simple,
+    left_folder_simple,
+    right_folder_nested_simple,
+    right_folder_simple,
 )
 
 __all__ = [
     "create_base_folder",
     "fill_folder_content",
-    "simple_folder_structure2",
-    "simple_folder_structure1",
-    "nested_simple_folder_structure1",
+    "filled_folder_factory",
+    "left_folder_nested_simple",
+    "right_folder_nested_simple",
+    "right_folder_simple_structure",
+    "right_folder_nested_simple_structure",
+    "left_folder_simple_structure",
+    "left_folder_nested_simple_structure",
+    "left_folder_simple",
+    "right_folder_simple",
 ]
