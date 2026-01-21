@@ -1,11 +1,10 @@
 ## Description
 
----
+
 Command line input to view or sync missing files in left or right folder.
 
 ## Features
 
----
 
 - View missing files - [Example](#view-missing-files), [Help](#help-view-missing-files)
 - Synchronizing missing files - [Example](#synchronizing-missing-files), [Help](#help-synchronizing-missing-files)
@@ -19,7 +18,6 @@ Command line input to view or sync missing files in left or right folder.
 
 ## Help structure
 
----
 
 ### Main help
 
@@ -87,8 +85,6 @@ Options:
 
 
 ## Examples
-
----
 
 Structure example with missing folders, files
 ```
