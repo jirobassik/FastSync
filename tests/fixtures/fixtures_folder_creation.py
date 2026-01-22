@@ -31,32 +31,3 @@ def filled_folder_factory(create_base_folder, fill_folder_content):
         return fill_folder_content(base_folder, structure)
 
     return _create_filled_folder
-
-
-@pytest.fixture(scope="session")
-def left_folder_simple(filled_folder_factory, left_folder_simple_structure):
-    return filled_folder_factory("left_folder", left_folder_simple_structure)
-
-
-@pytest.fixture(scope="session")
-def left_folder_nested_simple(
-    filled_folder_factory,
-    left_folder_nested_simple_structure,
-):
-    return filled_folder_factory("left_folder", left_folder_nested_simple_structure)
-
-
-@pytest.fixture(scope="session")
-def right_folder_simple(
-    filled_folder_factory,
-    right_folder_simple_structure,
-):
-    return filled_folder_factory("right_folder", right_folder_simple_structure)
-
-
-@pytest.fixture(scope="session")
-def right_folder_nested_simple(
-    filled_folder_factory,
-    right_folder_nested_simple_structure,
-):
-    return filled_folder_factory("right_folder", right_folder_nested_simple_structure)

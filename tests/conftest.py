@@ -41,6 +41,38 @@ def filter_reader_fast_sync_fabric():
 
 
 @pytest.fixture(scope="session")
+def fast_sync_simple_folder_default_reader_left_empty(
+    default_fast_sync_fabric,
+    create_base_folder,
+    right_folder_simple,
+):
+    return default_fast_sync_fabric(
+        create_base_folder("left_folder"), right_folder_simple
+    )
+
+
+@pytest.fixture(scope="session")
+def fast_sync_simple_folder_default_reader_right_empty(
+    default_fast_sync_fabric,
+    left_folder_simple,
+    create_base_folder,
+):
+    return default_fast_sync_fabric(
+        left_folder_simple, create_base_folder("right_folder")
+    )
+
+
+@pytest.fixture(scope="session")
+def fast_sync_simple_folder_default_reader_all_empty(
+    default_fast_sync_fabric,
+    create_base_folder,
+):
+    return default_fast_sync_fabric(
+        create_base_folder("left_folder"), create_base_folder("right_folder")
+    )
+
+
+@pytest.fixture(scope="session")
 def fast_sync_simple_folder_default_reader(
     default_fast_sync_fabric,
     left_folder_simple,

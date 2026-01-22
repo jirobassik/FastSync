@@ -5,7 +5,54 @@ from pytest_unordered import unordered
 
 
 @pytest.mark.little
-def test_fast_sync_diff_left_folder(fast_sync_simple_folder_default_reader):
+def test_diff_empty_left_folder(fast_sync_simple_folder_default_reader_left_empty):
+    """Check missing files in left folder (empty), right folder with simple structure folders"""
+    expected_files = ["file2.txt", "users.csv", "file1.txt"]
+    actual_files = [
+        file.name
+        for file in fast_sync_simple_folder_default_reader_left_empty.left_missing_files()
+    ]
+    assert unordered(actual_files) == expected_files
+
+
+@pytest.mark.little
+def test_diff_empty_right_folder(fast_sync_simple_folder_default_reader_right_empty):
+    """Check missing files in right folder (empty), left folder with simple structure folders"""
+    expected_files = ["data.json", "config.yaml", "data.json", "file1.txt"]
+    actual_files = [
+        file.name
+        for file in fast_sync_simple_folder_default_reader_right_empty.right_missing_files()
+    ]
+    assert unordered(actual_files) == expected_files
+
+
+@pytest.mark.little
+def test_diff_empty_left_folder_all_empty(
+    fast_sync_simple_folder_default_reader_all_empty,
+):
+    """Check missing files in left folder, all folders empty"""
+    expected_files = []
+    actual_files = list(
+        fast_sync_simple_folder_default_reader_all_empty.left_missing_files()
+    )
+    assert actual_files == expected_files
+
+
+@pytest.mark.little
+def test_diff_empty_right_folder_all_empty(
+    fast_sync_simple_folder_default_reader_all_empty,
+):
+    """Check missing files in right folder, all folders empty"""
+    expected_files = []
+    actual_files = list(
+        fast_sync_simple_folder_default_reader_all_empty.right_missing_files()
+    )
+    assert actual_files == expected_files
+
+
+@pytest.mark.little
+def test_diff_left_folder(fast_sync_simple_folder_default_reader):
+    """Check missing files in left folder with simple structure folders"""
     expected_files = ["file2.txt", "users.csv"]
     actual_files = [
         file.name
@@ -15,7 +62,8 @@ def test_fast_sync_diff_left_folder(fast_sync_simple_folder_default_reader):
 
 
 @pytest.mark.little
-def test_fast_sync_diff_right_folder(fast_sync_simple_folder_default_reader):
+def test_diff_right_folder(fast_sync_simple_folder_default_reader):
+    """Check missing files in right folder with simple structure folders"""
     expected_files = ["data.json", "config.yaml", "data.json"]
     actual_files = [
         file.name
@@ -25,9 +73,10 @@ def test_fast_sync_diff_right_folder(fast_sync_simple_folder_default_reader):
 
 
 @pytest.mark.little
-def test_fast_sync_diff_left_folder_nested(
+def test_diff_left_folder_nested(
     fast_sync_left_nested_simple_folder_default_reader,
 ):
+    """Check missing files in left folder with nested structure"""
     expected_files = ["file1.txt", "file2.txt", "users.csv"]
     actual_files = [
         file.name
@@ -37,9 +86,10 @@ def test_fast_sync_diff_left_folder_nested(
 
 
 @pytest.mark.little
-def test_fast_sync_diff_right_folder_nested(
+def test_diff_right_folder_nested(
     fast_sync_left_nested_simple_folder_default_reader,
 ):
+    """Check missing files in right folder with nested structure"""
     expected_files = [
         "config.yaml",
         "file1.txt",
@@ -55,9 +105,10 @@ def test_fast_sync_diff_right_folder_nested(
 
 
 @pytest.mark.little
-def test_fast_sync_diff_all_folder_nested(
+def test_diff_all_folder_nested(
     fast_sync_all_nested_simple_folder_default_reader,
 ):
+    """Check missing files in left folder, left and right folder with nested structure"""
     expected_files = ["file2.txt", "users.csv"]
     actual_files = [
         file.name
@@ -77,7 +128,8 @@ FIXTURE_DIR = Path().home() / "OS_emulate"
     on_duplicate="ignore",
     keep_top_dir=True,
 )
-def test_fast_sync_diff_left_big_folder(default_fast_sync_fabric, datafiles):
+def test_diff_left_big_folder(default_fast_sync_fabric, datafiles):
+    """Check missing files in left folder, big left and right folders from local storage"""
     expected_files = [
         "AlbumArt_{B5020207-474E-4720-96D5-B12E861D6A00}_Large.jpg",
         "AlbumArt_{99332582-9CB8-42B0-BB5E-F2A75F45E3F3}_Small.jpg",
@@ -106,7 +158,8 @@ def test_fast_sync_diff_left_big_folder(default_fast_sync_fabric, datafiles):
     on_duplicate="ignore",
     keep_top_dir=True,
 )
-def test_fast_sync_diff_right_big_folder(default_fast_sync_fabric, datafiles):
+def test_diff_right_big_folder(default_fast_sync_fabric, datafiles):
+    """Check missing files in right folder, big left and right folders from local storage"""
     expected_files = [
         "Lost Weekend Western Swing Band - Let's Ride Into The Sunset Together.mp3",
         "Tommy Smith ft. Darell Wayne Perry - Goin Under.mp3",
@@ -134,9 +187,8 @@ def test_fast_sync_diff_right_big_folder(default_fast_sync_fabric, datafiles):
     on_duplicate="ignore",
     keep_top_dir=True,
 )
-def test_fast_sync_diff_left_big_folder_with_filters(
-    filter_reader_fast_sync_fabric, datafiles
-):
+def test_diff_left_big_folder_with_filters(filter_reader_fast_sync_fabric, datafiles):
+    """Check missing files in left folder, big left and right folders from local storage, extensions filters"""
     expected_files = [
         "AlbumArt_{B5020207-474E-4720-96D5-B12E861D6A00}_Large.jpg",
         "AlbumArt_{99332582-9CB8-42B0-BB5E-F2A75F45E3F3}_Small.jpg",
@@ -169,9 +221,8 @@ def test_fast_sync_diff_left_big_folder_with_filters(
     on_duplicate="ignore",
     keep_top_dir=True,
 )
-def test_fast_sync_diff_right_big_folder_with_filters(
-    filter_reader_fast_sync_fabric, datafiles
-):
+def test_diff_right_big_folder_with_filters(filter_reader_fast_sync_fabric, datafiles):
+    """Check missing files in right folder, big left and right folders from local storage, extensions filters"""
     expected_files = [
         "Mix_tracklist.txt",
     ]
@@ -233,9 +284,10 @@ def test_fast_sync_diff_right_big_folder_with_filters(
     on_duplicate="ignore",
     keep_top_dir=True,
 )
-def test_fast_sync_diff_left_big_folder_with_various_filters(
+def test_diff_left_big_folder_with_various_filters(
     filter_reader_fast_sync_fabric, datafiles, extensions, folders, expected_files
 ):
+    """Check missing files in left folder, big left and right folders from local storage, extensions and folders filters"""
     left_folder = datafiles / "pytest Small music1"
     right_folder = datafiles / "pytest Small music2"
     fast_sync = filter_reader_fast_sync_fabric(
