@@ -215,5 +215,5 @@ cython_debug/
 
 # Custom files and folders
 
-main3.py
 test_fodlers/
+compiled/
