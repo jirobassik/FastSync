@@ -10,7 +10,7 @@ from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import (
     FolderFilterReader,
 )
 from fast_sync.utils.error import NotValidFilterInput
-from logging_config import logger
+from loguru import logger
 
 from .utils import CustomHelp, ProgressBarFastSync, error_output
 
