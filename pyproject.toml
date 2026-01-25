@@ -117,13 +117,13 @@ pythonpath = ["fast_sync"]
 python_files = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
 addopts = [
-    "-vv", # подробный вывод хода теста
+    "-vv",
 ]
 markers = [
-    "slow: долгие тесты",
-    "integration: интеграционные тесты",
-    "unittest: модульные тесты",
-    "little: тесты с папками маленького размера",
-    "big: тесты с папками большого размера",
-    "filters: тесты с фильтрами для файлов"
+    "slow: long tests",
+    "integration: integration tests",
+    "unittest: unit tests",
+    "little: tests with little folders size",
+    "big: tests with big folders size",
+    "filters: tests with filters content"
 ]

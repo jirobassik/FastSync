@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 from fast_sync import FolderFilterReader
@@ -8,6 +10,9 @@ from fast_sync.folder_reader.folder_filter_reader import (
 )
 from fast_sync.main import FastSync
 from tests.fixtures import *  # noqa: F403
+
+FIXTURE_DIR_INTERNAL = Path(__file__).parent / "fixtures/test_folders"
+FIXTURE_DIR_EXTERNAL = Path().home() / "OS_emulate"
 
 
 @pytest.fixture(scope="session")
