@@ -1,8 +1,10 @@
 [project]
 name = "fastsync"
-version = "0.1.0"
+version = "0.1.0-alpha"
 description = "CLI for syncing two folders"
+author= ["jirobassik"]
 readme = "README.md"
+license = {file = "LICENSE.md"}
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.3.1",
