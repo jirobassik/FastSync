@@ -6,7 +6,11 @@ Command line input to view or sync missing files in left or right folder.
 1. Docker
    1. In running container terminal input `fs --help`
    2. Example folders in `FastSync/tests/test_folders/`
-   3. Example command `-l "tests/fixtures/test_folders/Simple1" -r "tests/fixtures/test_folders/Simple2" -g missing right`
+   3. Example command
+      
+      ```
+      fs -l "tests/fixtures/test_folders/Simple1" -r "tests/fixtures/test_folders/Simple2" -g missing right
+      ```
 
 ## Features
 
