@@ -10,6 +10,7 @@ dependencies = [
     "click>=8.3.1",
     "click-extra>=7.4.0",
     "loguru>=0.7.3",
+    "pyinstaller>=6.18.0",
     "python-dotenv>=1.2.1",
     "tqdm>=4.67.1",
 ]
@@ -19,7 +20,6 @@ fs = "cli.main:fast_sync_cli"
 
 [dependency-groups]
 dev = [
-    "pyinstaller>=6.18.0",
     "pytest>=9.0.2",
     "pytest-datafiles>=3.0.1",
     "pytest-unordered>=0.7.0",

@@ -1,0 +1,15 @@
+**/.git
+**/.gitignore
+**/.vscode
+**/coverage
+**/.env
+**/.aws
+**/.ssh
+Dockerfile
+docker-compose.yml
+test_fodlers
+compiled
+.gitattributes
+**/.DS_Store
+**/venv
+**/env
