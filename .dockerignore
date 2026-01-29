@@ -5,11 +5,12 @@
 **/.env
 **/.aws
 **/.ssh
-Dockerfile
-docker-compose.yml
-test_fodlers
-compiled
-.gitattributes
 **/.DS_Store
 **/venv
 **/env
+Dockerfile
+docker-compose.yml
+.gitattributes
+test_fodlers
+compiled
+logs
