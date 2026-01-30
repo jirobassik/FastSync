@@ -25,7 +25,10 @@ class SyncFabric:
         self._sync_files = lambda: getattr(self._obj, f"{direction}_sync_files")()
 
         self._required_operations = {"sync_files": self._sync_files_wrap}
-        self._optional_operations = {"check_sync": self._recheck_sync, "open_sync_folder": self._open_sync_folder}
+        self._optional_operations = {
+            "check_sync": self._recheck_sync,
+            "open_sync_folder": self._open_sync_folder,
+        }
         self._all_operations = self._required_operations | self._optional_operations
 
         self._obj = None

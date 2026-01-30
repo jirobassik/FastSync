@@ -4,7 +4,7 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from fast_sync import HashContentFolder, FolderSync, FastSync
+from fast_sync import FastSync, FolderSync, HashContentFolder
 from fast_sync.utils.types import ListHashPathKeyValue
 
 
@@ -13,9 +13,12 @@ class ProgressBarHashContentFolder(HashContentFolder):
         results = []
         with multiprocessing.Pool() as pool:
             with tqdm(desc=f"Creating hash: {path_to_main_folder}") as pbar:
-                hash_path_add_path_to_main_folder = partial(self._hash_path, path_to_main_folder=path_to_main_folder)
+                hash_path_add_path_to_main_folder = partial(
+                    self._hash_path, path_to_main_folder=path_to_main_folder
+                )
                 for result in pool.imap_unordered(
-                        hash_path_add_path_to_main_folder, self._reader.operation(path_to_main_folder)
+                    hash_path_add_path_to_main_folder,
+                    self._reader.operation(path_to_main_folder),
                 ):
                     results.append(result)
                     pbar.update(1)
