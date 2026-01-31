@@ -30,7 +30,7 @@ jobs:
         run: uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
 
       - name: Zip compile
-        run: uv run -m zipfile -c fs-${{ matrix.os }}.zip compiled/dist/*
+        run: uv run -m zipfile -c fs-${{ matrix.os }}.zip compiled/dist/
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v6
