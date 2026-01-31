@@ -1,19 +1,24 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
 
 jobs:
   build:
-    name: python
-    runs-on: ubuntu-latest
+    name: Build FastSync
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
 
     steps:
-      - uses: actions/checkout@v6
-      
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
-          # Install a specific version of uv.
           version: "0.9.26"
 
       - name: Set up Python
@@ -36,5 +41,37 @@ jobs:
       - name: Run tests
         run: uv run pytest tests -m "little"
 
+  compile:
+    name: Compile bin FastSync
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
 
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.26"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+
+      - name: Compile bin
+        run: uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
+
+      - name: Archive Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: fs-${{ matrix.os }}
+          path: compiled/dist
+
+      - name: List Artifacts
+        run: ls compiled
       

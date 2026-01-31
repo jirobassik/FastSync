@@ -11,6 +11,5 @@
 Dockerfile
 docker-compose.yml
 .gitattributes
-test_fodlers
 compiled
 logs

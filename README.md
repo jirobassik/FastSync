@@ -3,22 +3,45 @@
 Command line input to view or sync missing files in two folders.
 
 ## Starting
-1. Docker
-   1. Build image 
-       ```
-       docker build -t fast_sync .
-       ```
-   2. Run container. In `source` specify your folders
-       ```
-       docker run --mount type=bind,source="/home/puzer/OS_emulate/test docker/Folder1",target=/home/Folder1 --mount type=bind,source="/home/puzer/OS_emulate/test docker/Folder2",target=/home/Folder2 -it --rm fast_sync
-       ```
-   3. Example command
-       ```
-       fs -l "/home/Folder1" -r "/home/Folder2" -g sync left --view-missing --check-sync
-       ```
+
+### Pre-compiled binary
+
+Download from [here](https://github.com/jirobassik/FastSync/releases) for Linux, Windows.
+
+#### Linux
+
+Find the `PATH` in your system.
+
+```bash
+$ echo $PATH
+```
+
+Move the `fs` binary to one of the listed locations.
+
+#### Windows
+
+Go to environment variables
+
+1. `Win + r` >> sysdm.cpl >> Ok
+2. Advanced >> Environment Variables
+3. In `System variables` choose `Path`(double click) >> Browse >> Choose `Path` to `fs.exe` folder
+
+#### Docker
+
+1. Build image
+    ```
+    docker build -t fast_sync .
+    ```
+2. Run container. In `source` specify your folders
+    ```
+    docker run --mount type=bind,source="/home/puzer/OS_emulate/test docker/Folder1",target=/home/Folder1 --mount type=bind,source="/home/puzer/OS_emulate/test docker/Folder2",target=/home/Folder2 -it --rm fast_sync
+    ```
+3. Example command
+    ```
+    fs -l "/home/Folder1" -r "/home/Folder2" -g sync left --view-missing --check-sync
+    ```
 
 ## Features
-
 
 - View missing files - [Example](#view-missing-files), [Help](#help-view-missing-files)
 - Synchronizing missing files - [Example](#synchronizing-missing-files), [Help](#help-synchronizing-missing-files)
@@ -31,7 +54,6 @@ Command line input to view or sync missing files in two folders.
     - Filtered files
 
 ## Help structure
-
 
 ### Main help
 
@@ -97,10 +119,10 @@ Options:
   --help              Show this message and exit.
 ```
 
-
 ## Examples
 
 Structure example with missing folders, files
+
 ```
 Folder1                         Folder2
 ────────────────                ────────────────
@@ -174,7 +196,6 @@ Creating hash: /home/puzer/OS_emulate/Folder2: 9it [00:00, 41.62it/s]
 
 ### Synchronizing missing files
 
-
 **Command** for `Folder1` with `--view-missing` and `--check-sync` options:
 
 ```
@@ -182,6 +203,7 @@ uv run fast_sync.py -l "/home/puzer/OS_emulate/Folder1" -r "/home/puzer/OS_emula
 ```
 
 **Output**:
+
 ```
 Creating hash: /home/puzer/OS_emulate/Folder1: 6it [00:00, 29.91it/s]
 Creating hash: /home/puzer/OS_emulate/Folder2: 9it [00:00, 42.38it/s]
@@ -215,12 +237,12 @@ Creating hash: /home/puzer/OS_emulate/Folder2: 9it [00:00, 41.71it/s]
 
 **Command** for `Folder2`:
 
-
 ```
 uv run fast_sync.py -l "/home/puzer/OS_emulate/Folder1" -r "/home/puzer/OS_emulate/Folder2" -g sync right
 ```
 
 **Output**:
+
 ```
 Creating hash: /home/puzer/OS_emulate/Folder1: 11it [00:00, 49.48it/s]
 Creating hash: /home/puzer/OS_emulate/Folder2: 9it [00:00, 41.51it/s]
@@ -232,18 +254,19 @@ Copying files: 100%|████████████████████
 Successful syncing folders: Folder2 with Folder1
 ```
 
-
-
 ### Content filtering
 
-Exclude `New vegas` folder and only files with `.wav` extension. For this example I added file `Rus dnb/Collapse.wav` in `Folder2`
+Exclude `New vegas` folder and only files with `.wav` extension. For this example I added file `Rus dnb/Collapse.wav` in
+`Folder2`
 
 **Command**:
+
 ```
 uv run fast_sync.py -l "/home/puzer/OS_emulate/Folder1" -r "/home/puzer/OS_emulate/Folder2" -g -e ".wav" -f "New vegas" missing left
 ```
 
 **Output**:
+
 ```
 Creating hash: /home/puzer/OS_emulate/Folder1: 0it [00:00, ?it/s]
 Creating hash: /home/puzer/OS_emulate/Folder2: 1it [00:00, 14.05it/s]

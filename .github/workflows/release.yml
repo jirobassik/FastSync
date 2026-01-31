@@ -1,0 +1,70 @@
+name: Release
+on:
+  push:
+    tags: [ '*' ]
+
+jobs:
+  compile-bin:
+    name: Compile bin FastSync
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.9.26"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+
+      - name: Compile bin
+        run: uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
+
+      - name: Zip compile
+        run: uv run -m zipfile -c fs-${{ matrix.os }}.zip compiled/dist/*
+
+      - name: Archive Artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: fs-${{ matrix.os }}
+          path: fs-${{ matrix.os }}.zip
+
+  release:
+    name: Release FastSync
+    needs: compile-bin
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v6
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v7
+        with:
+          path: artifacts/
+
+      - name: List Downloaded Artifacts
+        run: |
+          echo "Ls artifacts/:"
+          find artifacts/ -type f
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          bodyFile: relnotes/${{ github.ref_name }}.md
+          artifacts: "artifacts/fs-ubuntu-latest/*,artifacts/fs-windows-latest/*"
+          artifactErrorsFailBuild: true
+          token: ${{ github.token }}
