@@ -1,4 +1,5 @@
 import click
+from loguru import logger
 
 from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync import FolderReader
@@ -10,7 +11,6 @@ from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import (
     FolderFilterReader,
 )
 from fast_sync.utils.error import NotValidFilterInput
-from loguru import logger
 
 from .utils import CustomHelp, ProgressBarFastSync, error_output
 
@@ -43,7 +43,6 @@ def fast_sync_cli(ctx, left_folder, right_folder, group, sort, extensions, folde
             right_folder,
             reader,
         )
-        progress_bar_sync_manager.analyze()
     except NotValidFilterInput:
         logger.debug("Not valid filter input")
         error_output(
