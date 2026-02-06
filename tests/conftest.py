@@ -110,6 +110,12 @@ def fast_sync_all_nested_simple_folder_default_reader(
 
 @pytest.fixture(scope="session")
 def internal_folders_simple():
-    left_folder = FIXTURE_DIR_INTERNAL / "Simple1"
-    right_folder = FIXTURE_DIR_INTERNAL / "Simple2"
-    return left_folder, right_folder
+    def _internal_folders_simple(as_posix=False):
+        left_folder = FIXTURE_DIR_INTERNAL / "Simple1"
+        right_folder = FIXTURE_DIR_INTERNAL / "Simple2"
+        return (
+            (left_folder.as_posix(), right_folder.as_posix())
+            if as_posix
+            else (left_folder, right_folder)
+        )
+    return _internal_folders_simple
