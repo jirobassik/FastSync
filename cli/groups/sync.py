@@ -4,15 +4,18 @@ import click
 import click_extra
 
 from cli.main import fast_sync_cli
+from cli.utils.decorators import path_setup_wrapper
 from cli.utils.output_formaters.formaters import white_bolt_text
 from cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.main import FastSync
 
 
 @fast_sync_cli.group(help="Sync chosen folder")
-@click.pass_context
-def sync(ctx):
-    ctx.obj.prepare_sync()
+@path_setup_wrapper
+@click.pass_obj
+def sync(obj: FastSync, left_folder, right_folder):
+    obj.path_setup(left_folder, right_folder)
+    obj.prepare_sync()
 
 
 class SyncFabric:

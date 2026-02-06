@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   build:
@@ -39,7 +41,7 @@ jobs:
         run: uv run ruff format . --exclude "cli/main.py" --check
 
       - name: Run tests
-        run: uv run pytest tests -m "little"
+        run: uv run pytest tests -m "not big" tests/test_path_setup.py tests/test_sync_manager.py
 
   compile:
     name: Compile bin FastSync
