@@ -118,4 +118,5 @@ def internal_folders_simple():
             if as_posix
             else (left_folder, right_folder)
         )
+
     return _internal_folders_simple
