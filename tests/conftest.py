@@ -19,7 +19,8 @@ FIXTURE_DIR_EXTERNAL = Path().home() / "OS_emulate"
 def default_fast_sync_fabric():
     def _default_fast_sync_fabric(left_folder, right_folder):
         reader = FolderReader()
-        fast_sync = FastSync(left_folder, right_folder, reader)
+        fast_sync = FastSync(reader)
+        fast_sync.path_setup(left_folder, right_folder)
         fast_sync.analyze()
         return fast_sync
 
@@ -38,7 +39,8 @@ def filter_reader_fast_sync_fabric():
             FilterFolders(*folders),
             FilterExtensionsFolder(*extensions),
         )
-        fast_sync = FastSync(left_folder, right_folder, reader)
+        fast_sync = FastSync(reader)
+        fast_sync.path_setup(left_folder, right_folder)
         fast_sync.analyze()
         return fast_sync
 
@@ -104,3 +106,10 @@ def fast_sync_all_nested_simple_folder_default_reader(
     return default_fast_sync_fabric(
         left_folder_nested_simple, right_folder_nested_simple
     )
+
+
+@pytest.fixture(scope="session")
+def internal_folders_simple():
+    left_folder = FIXTURE_DIR_INTERNAL / "Simple1"
+    right_folder = FIXTURE_DIR_INTERNAL / "Simple2"
+    return left_folder, right_folder

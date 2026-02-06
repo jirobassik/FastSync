@@ -6,4 +6,4 @@ ruff:
 	uv run ruff format . --exclude "cli/main.py" --check
 
 pytest:
-	uv run pytest tests -m "little"
+	uv run pytest tests -m "not big" tests/test_path_setup.py tests/test_sync_manager.py

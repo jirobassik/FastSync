@@ -16,16 +16,12 @@ from .utils import CustomHelp, ProgressBarFastSync, error_output
 
 
 @click.group(cls=CustomHelp)
-@click.option('--left-folder', '-left', '-l', required=True, envvar="LEFT_FOLDER",
-              type=click.Path(exists=True, file_okay=False))
-@click.option('--right-folder', '-right', '-r', required=True, envvar="RIGHT_FOLDER",
-              type=click.Path(exists=True, file_okay=False))
 @click.option("--group", "-g", is_flag=True, help="Group files by folders [Affects the output format]")
 @click.option("--sort", "-s", is_flag=True, help="Sort files by name [Affects the output format]")
 @click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
 @click.pass_context
-def fast_sync_cli(ctx, left_folder, right_folder, group, sort, extensions, folders):
+def fast_sync_cli(ctx, group, sort, extensions, folders):
     ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
 
     click.echo("---" * 30)
@@ -38,11 +34,7 @@ def fast_sync_cli(ctx, left_folder, right_folder, group, sort, extensions, folde
                 FilterExtensionsFolder(*extensions),
             )
 
-        progress_bar_sync_manager = ProgressBarFastSync(
-            left_folder,
-            right_folder,
-            reader,
-        )
+        progress_bar_sync_manager = ProgressBarFastSync(reader)
     except NotValidFilterInput:
         logger.debug("Not valid filter input")
         error_output(

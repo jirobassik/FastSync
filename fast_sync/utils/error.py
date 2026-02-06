@@ -5,3 +5,11 @@ class NotValidFilterInput(Exception):
 
 class SyncManagerError(AttributeError):
     pass
+
+
+class PathSetupError(ValueError):
+    pass
+
+
+class ValidationPathError(ValueError):
+    pass

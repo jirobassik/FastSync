@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Self
 
 
 class Component(ABC):
@@ -46,7 +47,7 @@ class FolderDecorator(FilterValues, Component):
     def __init__(self, *args) -> None:
         super().__init__(*args)
 
-    def __call__(self, component: Component):
+    def __call__(self, component: Component) -> Self:
         self._component = component
         return self
 
