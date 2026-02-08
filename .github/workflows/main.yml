@@ -38,7 +38,7 @@ jobs:
         run: uv run ruff check .
 
       - name: Format with ruff format
-        run: uv run ruff format . --exclude "cli/main.py" --check
+        run: uv run ruff format . --exclude "fast_sync/cli/main.py" --check
 
       - name: Run tests
         run: uv run pytest tests -m "not big" tests/test_path_setup.py tests/test_sync_manager.py

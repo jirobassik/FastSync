@@ -1,6 +1,6 @@
 import click
 
-from cli.utils.line_wrapper import line_wrapper
+from fast_sync.cli.utils.line_wrapper import line_wrapper
 
 
 @line_wrapper(type_line="*")

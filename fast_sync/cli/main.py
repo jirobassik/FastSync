@@ -1,7 +1,7 @@
 import click
 from loguru import logger
 
-from cli.utils.output_formaters.output_formater import OutputFormater
+from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync import FolderReader
 from fast_sync.folder_reader.folder_filter_reader import (
     FilterExtensionsFolder,

@@ -1,6 +1,6 @@
 from multiprocessing import freeze_support
 
-from cli.main import fast_sync_cli
+from fast_sync.cli.main import fast_sync_cli
 from fast_sync.utils.logging_config import setup_logging
 
 if __name__ == "__main__":

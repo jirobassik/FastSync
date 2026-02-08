@@ -1,7 +1,7 @@
 import click
 from click import Context, HelpFormatter, wrap_text
 
-from cli.utils.custom_help.examples import examples_cli, examples
+from fast_sync.cli.utils.custom_help.examples import examples_cli, examples
 
 
 class CustomHelpFormatter(HelpFormatter):

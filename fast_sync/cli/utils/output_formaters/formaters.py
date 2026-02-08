@@ -3,7 +3,7 @@ from pathlib import Path
 
 import click
 
-from cli.utils.line_wrapper import line_wrapper, group_line_wrapper
+from fast_sync.cli.utils.line_wrapper import line_wrapper, group_line_wrapper
 
 
 @line_wrapper(type_line="*", num_lines=35)
