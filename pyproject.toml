@@ -8,7 +8,8 @@ license = {file = "LICENSE.md"}
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.3.1",
-    "click-extra>=7.4.0",
+    "click-extra==7.4.0",
+    "extra-platforms==7.0.0",
     "loguru>=0.7.3",
     "pyinstaller>=6.18.0",
     "python-dotenv>=1.2.1",
