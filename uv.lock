@@ -109,7 +109,7 @@ wheels = [
 
 [[package]]
 name = "click-extra"
-version = "7.5.1"
+version = "7.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "boltons" },
@@ -121,9 +121,9 @@ dependencies = [
     { name = "tabulate", extra = ["widechars"] },
     { name = "wcmatch" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ec/9f/b12162e9da04f4d26bf9f1f055c597f3620ebbfd041d6c9a06c2a13dd293/click_extra-7.5.1.tar.gz", hash = "sha256:df11522e33a3c5a7e9418d8b5b8882d92107c8ce7539fd0d7450b86f6ab7b7c5", size = 95312, upload-time = "2026-02-05T19:27:40.583Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/50/2a/79e85d7683fd97037326dbdad60524c075ef01dad2adad0a6d6fa40c41a4/click_extra-7.4.0.tar.gz", hash = "sha256:869cd811074a4c5049fb241087e55242bf36ee328133ae932f37730833d9b9d9", size = 86763, upload-time = "2025-12-08T05:06:28.587Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0d/7c/2d32bf570107407f088913a9f3b4286a0822b21bc20059bf53489435d47d/click_extra-7.5.1-py3-none-any.whl", hash = "sha256:0fadd72638174682c16f2de4480ca9e9d9b4a3b1c97653a718e4b0eb1d0a4ced", size = 111585, upload-time = "2026-02-05T19:27:41.953Z" },
+    { url = "https://files.pythonhosted.org/packages/5f/8e/61d484461ead9f2c971ba11a9ee591aed0c0e707b2e4ac28ddc26e65e486/click_extra-7.4.0-py3-none-any.whl", hash = "sha256:f827066818b8f41e83189793e64dcd67425b228f62332597e02d3ec9cf4711b5", size = 102505, upload-time = "2025-12-08T05:06:27.164Z" },
 ]
 
 [[package]]
@@ -167,14 +167,14 @@ wheels = [
 
 [[package]]
 name = "extra-platforms"
-version = "8.0.0"
+version = "7.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "distro" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/69/13/f3c798301018f336533918768fe64a3aeab02e9e3d110ff778296e50b8e0/extra_platforms-8.0.0.tar.gz", hash = "sha256:39c5f47f071f8710ce3cba8373fd7744a2a3dc37d5716cc227c23b47e211e5b5", size = 56441, upload-time = "2026-02-02T17:54:17.17Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8c/36/1cf59977458a824a759a38b8279c7d5e41d8de12368f3685d188a5cc3ce4/extra_platforms-7.0.0.tar.gz", hash = "sha256:e45d539ae667e59711d3d4c25bba36bf0a45af7d444a64f6d22466cec3826965", size = 51724, upload-time = "2026-01-18T10:09:09.575Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dc/82/c98ca964746efe66ce126844871e3a33b20f3ac7854e9eb5831e820ce87a/extra_platforms-8.0.0-py3-none-any.whl", hash = "sha256:44c2815b6dbd73f5eaf961ebeb2d6cca224a6ccf156c298cf6a088ad8ea1b2c6", size = 62029, upload-time = "2026-02-02T17:54:14.553Z" },
+    { url = "https://files.pythonhosted.org/packages/30/dd/08ec26f75da946428fd1a440c6a8a57da961fb1d677ce3ca94ad1887c0ef/extra_platforms-7.0.0-py3-none-any.whl", hash = "sha256:8c1316ff93a339f7a929ffddb169d4e075de6a2c5e2a55b6590eef21d46274ce", size = 56711, upload-time = "2026-01-18T10:09:10.484Z" },
 ]
 
 [[package]]
@@ -184,6 +184,7 @@ source = { editable = "." }
 dependencies = [
     { name = "click" },
     { name = "click-extra" },
+    { name = "extra-platforms" },
     { name = "loguru" },
     { name = "pyinstaller" },
     { name = "python-dotenv" },
@@ -201,7 +202,8 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.3.1" },
-    { name = "click-extra", specifier = ">=7.4.0" },
+    { name = "click-extra", specifier = "==7.4.0" },
+    { name = "extra-platforms", specifier = "==7.0.0" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "pyinstaller", specifier = ">=6.18.0" },
     { name = "python-dotenv", specifier = ">=1.2.1" },
@@ -492,11 +494,11 @@ wheels = [
 
 [[package]]
 name = "wcwidth"
-version = "0.5.3"
+version = "0.6.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/c2/62/a7c072fbfefb2980a00f99ca994279cb9ecf310cb2e6b2a4d2a28fe192b3/wcwidth-0.5.3.tar.gz", hash = "sha256:53123b7af053c74e9fe2e92ac810301f6139e64379031f7124574212fb3b4091", size = 157587, upload-time = "2026-01-31T03:52:10.92Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/35/a2/8e3becb46433538a38726c948d3399905a4c7cabd0df578ede5dc51f0ec2/wcwidth-0.6.0.tar.gz", hash = "sha256:cdc4e4262d6ef9a1a57e018384cbeb1208d8abbc64176027e2c2455c81313159", size = 159684, upload-time = "2026-02-06T19:19:40.919Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3c/c1/d73f12f8cdb1891334a2ccf7389eed244d3941e74d80dd220badb937f3fb/wcwidth-0.5.3-py3-none-any.whl", hash = "sha256:d584eff31cd4753e1e5ff6c12e1edfdb324c995713f75d26c29807bb84bf649e", size = 92981, upload-time = "2026-01-31T03:52:09.14Z" },
+    { url = "https://files.pythonhosted.org/packages/68/5a/199c59e0a824a3db2b89c5d2dade7ab5f9624dbf6448dc291b46d5ec94d3/wcwidth-0.6.0-py3-none-any.whl", hash = "sha256:1a3a1e510b553315f8e146c54764f4fb6264ffad731b3d78088cdb1478ffbdad", size = 94189, upload-time = "2026-02-06T19:19:39.646Z" },
 ]
 
 [[package]]
