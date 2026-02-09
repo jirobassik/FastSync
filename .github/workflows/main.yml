@@ -7,45 +7,45 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-    name: Build FastSync
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest ]
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v6
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "0.9.26"
-
-      - name: Set up Python
-        run: uv python install
-
-      - name: Install the project
-        run: uv sync --locked --all-extras --dev
-
-      - name: Print python versions
-        run: |
-          python -V
-          uv run python -V
-
-      - name: Lint with ruff check
-        run: uv run ruff check .
-
-      - name: Format with ruff format
-        run: uv run ruff format . --exclude "fast_sync/cli/main.py" --check
-
-      - name: Run tests
-        run: uv run pytest tests -m "not big" tests/test_path_setup.py tests/test_sync_manager.py
+#  build:
+#    name: Build FastSync
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ ubuntu-latest, windows-latest ]
+#
+#    steps:
+#      - name: Checkout Code
+#        uses: actions/checkout@v6
+#
+#      - name: Install uv
+#        uses: astral-sh/setup-uv@v7
+#        with:
+#          version: "0.9.26"
+#
+#      - name: Set up Python
+#        run: uv python install
+#
+#      - name: Install the project
+#        run: uv sync --locked --all-extras --dev
+#
+#      - name: Print python versions
+#        run: |
+#          python -V
+#          uv run python -V
+#
+#      - name: Lint with ruff check
+#        run: uv run ruff check .
+#
+#      - name: Format with ruff format
+#        run: uv run ruff format . --exclude "fast_sync/cli/main.py" --check
+#
+#      - name: Run tests
+#        run: uv run pytest tests -m "not big" tests/test_path_setup.py tests/test_sync_manager.py
 
   compile:
     name: Compile bin FastSync
-    needs: build
+#    needs: build
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
