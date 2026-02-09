@@ -68,11 +68,23 @@ jobs:
       - name: Compile bin
         run: uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
 
-      - name: Copy bin in local/bin
-        run: cp compiled/dist/fs $HOME/.local/bin
+      - name: Test bin Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          echo Copy bin in local/bin
+          cp compiled/dist/fs $HOME/.local/bin
+          
+          echo Test bin
+          $HOME/.local/bin/fs --help
 
-      - name: Test bin
-        run: $HOME/.local/bin/fs --help
+      - name: Test bin Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo Copy bin in PATH var
+          set PATH=%PATH%;"compiled\dist"
+          
+          echo Test bin
+          fs --help
 
       - name: Archive Artifact
         uses: actions/upload-artifact@v6
