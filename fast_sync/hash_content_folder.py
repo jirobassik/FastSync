@@ -4,6 +4,7 @@ from hashlib import md5
 from pathlib import Path
 
 from fast_sync import FolderFilterReader, FolderReader
+from fast_sync.utils.error import HashCalculationError
 from fast_sync.utils.types import HashPathKeyValue, ListHashPathKeyValue
 
 
@@ -41,9 +42,13 @@ class HashContentFolder:
 
     @staticmethod
     def _hash_path(path_to_file: Path, path_to_main_folder: Path) -> HashPathKeyValue:
-        key = (
-            md5(path_to_file.read_bytes()).hexdigest(),
-            path_to_file.relative_to(path_to_main_folder),
-        )
-        value = path_to_file
-        return key, value
+        try:
+            key = (
+                md5(path_to_file.read_bytes()).hexdigest(),
+                path_to_file.relative_to(path_to_main_folder),
+            )
+        except PermissionError as error:
+            raise HashCalculationError(error.filename)
+        else:
+            value = path_to_file
+            return key, value

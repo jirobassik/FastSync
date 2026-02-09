@@ -1,6 +1,16 @@
+from gettext import gettext as _
+
 import click
+from click import FileError
 
 from fast_sync.cli.utils.line_wrapper import line_wrapper
+
+
+class PermissionDeniedError(FileError):
+    def format_message(self) -> str:
+        return _("Could not open path {filename!r}: {message}").format(
+            filename=self.ui_filename, message=self.message
+        )
 
 
 @line_wrapper(type_line="*")
