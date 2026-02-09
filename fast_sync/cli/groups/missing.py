@@ -2,6 +2,7 @@ import click
 
 from fast_sync.cli.main import fast_sync_cli
 from fast_sync.cli.utils.decorators import path_setup_wrapper
+from fast_sync.cli.utils.error_handling import permission_denied_handling
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.main import FastSync
 
@@ -11,7 +12,7 @@ from fast_sync.main import FastSync
 @click.pass_obj
 def missing(obj: FastSync, left_folder, right_folder):
     obj.path_setup(left_folder, right_folder)
-    obj.analyze()
+    permission_denied_handling(obj.analyze)
 
 
 # noinspection PyUnresolvedReferences
