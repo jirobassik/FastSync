@@ -1,6 +1,12 @@
 compile:
 	uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
 
+copy-bin:
+	cp compiled/dist/fs $(HOME)/.local/bin
+
+test-bin:
+	echo `$(HOME)/.local/bin/fs --help`
+
 ruff:
 	uv run ruff check .
 	uv run ruff format . --exclude "fast_sync/cli/main.py" --check

@@ -68,6 +68,12 @@ jobs:
       - name: Compile bin
         run: uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
 
+      - name: Copy bin in local/bin
+        run: cp compiled/dist/fs $(HOME)/.local/bin
+
+      - name: Test bin
+        run: $(HOME)/.local/bin/fs --help
+
       - name: Archive Artifact
         uses: actions/upload-artifact@v6
         with:
