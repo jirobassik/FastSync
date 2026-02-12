@@ -21,6 +21,7 @@ fs = "cli.main:fast_sync_cli"
 
 [dependency-groups]
 dev = [
+    "memory-profiler>=0.61.0",
     "pytest>=9.0.2",
     "pytest-datafiles>=3.0.1",
     "pytest-unordered>=0.7.0",
