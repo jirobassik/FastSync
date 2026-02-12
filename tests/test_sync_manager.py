@@ -12,6 +12,7 @@ def test_continue_execute_with_not_valid_path(internal_folders_simple):
         sync_manager.path_setup("/home/puzer/OS_emulate/Fo", right_folder)
         sync_manager.analyze()
 
+
 @pytest.mark.local
 def test_hash_calculation_error(internal_folders_simple):
     left_folder, right_folder = internal_folders_simple(left_f="PermError")
