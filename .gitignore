@@ -216,3 +216,4 @@ cython_debug/
 # Custom files and folders
 
 compiled/
+tests/fixtures/test_folders/PermError/

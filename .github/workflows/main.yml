@@ -41,7 +41,7 @@ jobs:
         run: uv run ruff format . --exclude "fast_sync/cli/main.py" --check
 
       - name: Run tests
-        run: uv run pytest tests -m "not big" tests/test_path_setup.py tests/test_sync_manager.py
+        run: uv run pytest tests -m "not big and not local" tests/test_path_setup.py tests/test_sync_manager.py
 
   compile:
     name: Compile bin FastSync

@@ -13,3 +13,4 @@ docker-compose.yml
 .gitattributes
 compiled
 logs
+tests/fixtures/test_folders/PermError

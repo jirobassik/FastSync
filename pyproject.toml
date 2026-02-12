@@ -2,9 +2,9 @@
 name = "fastsync"
 version = "0.1.0-alpha"
 description = "CLI for syncing two folders"
-author= ["jirobassik"]
+author = ["jirobassik"]
 readme = "README.md"
-license = {file = "LICENSE.md"}
+license = { file = "LICENSE.md" }
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.3.1",
@@ -128,5 +128,6 @@ markers = [
     "unittest: unit tests",
     "little: tests with little folders size",
     "big: tests with big folders size",
-    "filters: tests with filters content"
+    "filters: tests with filters content",
+    "local: tests only working locally"
 ]
