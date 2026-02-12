@@ -4,12 +4,14 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from fast_sync import FastSync, FolderSync, HashContentFolder
+from fast_sync import FastSync, FolderSync, HashContentFolder, HashContentFolderCaching
 from fast_sync.utils.types import ListHashPathKeyValue
 
 
-class ProgressBarHashContentFolder(HashContentFolder):
-    def _create_hash(self, path_to_main_folder: Path) -> ListHashPathKeyValue:
+class ProgressBarHashContentFolderMixin:
+    def _create_hash(
+        self: HashContentFolder, path_to_main_folder: Path
+    ) -> ListHashPathKeyValue:
         results = []
         with multiprocessing.Pool() as pool:
             with tqdm(desc=f"Creating hash: {path_to_main_folder}") as pbar:
@@ -40,6 +42,19 @@ class ProgressBarFolderSync(FolderSync):
             self.folder_sync(source_folder, destination_folder, missing_file)
 
 
+class ProgressBarHashContentFolderCaching(
+    ProgressBarHashContentFolderMixin,
+    HashContentFolderCaching,
+):
+    pass
+
+
+class ProgressBarHashContentFolder(
+    ProgressBarHashContentFolderMixin,
+    HashContentFolder,
+):
+    pass
+
+
 class ProgressBarFastSync(FastSync):
-    hash_content_folder = ProgressBarHashContentFolder
     folder_sync_ = ProgressBarFolderSync

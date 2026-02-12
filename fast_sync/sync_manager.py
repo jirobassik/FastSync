@@ -1,3 +1,5 @@
+from typing import Type
+
 from fast_sync import (
     DiffFolder,
     FolderFilterReader,
@@ -5,19 +7,22 @@ from fast_sync import (
     FolderSync,
     HashContentFolder,
 )
+from fast_sync.hash_content_folder import HashContentFolderCaching
 from fast_sync.utils.error import SyncManagerError
 from fast_sync.utils.path_setup import PathSetup
 
 
 class SyncManager(PathSetup):
-    hash_content_folder = HashContentFolder
     folder_sync_ = FolderSync
 
     def __init__(
         self,
         reader: FolderReader | FolderFilterReader,
+        hash_method: Type[
+            HashContentFolder | HashContentFolderCaching
+        ] = HashContentFolder,
     ):
-        self._hash_content_folder = type(self).hash_content_folder(reader=reader)
+        self._hash_content_folder = hash_method(reader=reader)
         self._diff_folder = None
         self._folder_sync = None
         self._is_analyzed = False
