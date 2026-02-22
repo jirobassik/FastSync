@@ -35,7 +35,7 @@ def caching_fast_sync_fabric():
     def _default_fast_sync_fabric(left_folder, right_folder, path_to_cache):
         fast_sync = FastSync(
             HashContentFolderCaching(
-                cache_path=CacheFolderCreation(path_to_folder=path_to_cache)
+                cache_path=CacheFolderCreation(path_to_cache=path_to_cache)
             )
         )
         fast_sync.path_setup(left_folder, right_folder)
