@@ -1,35 +1,31 @@
 from fast_sync import (
     DiffFolder,
-    FolderFilterReader,
-    FolderReader,
     FolderSync,
     HashContentFolder,
 )
+from fast_sync.hash_content_folder import HashContentFolderCaching
 from fast_sync.utils.error import SyncManagerError
 from fast_sync.utils.path_setup import PathSetup
 
 
 class SyncManager(PathSetup):
-    hash_content_folder = HashContentFolder
     folder_sync_ = FolderSync
 
     def __init__(
         self,
-        reader: FolderReader | FolderFilterReader,
+        hash_method: HashContentFolder | HashContentFolderCaching = HashContentFolder(),
     ):
-        self._hash_content_folder = type(self).hash_content_folder(reader=reader)
+        self._hash_method = hash_method
         self._diff_folder = None
         self._folder_sync = None
         self._is_analyzed = False
 
     def analyze(self):
         if not self._is_analyzed:
-            self._hash_content_folder.calculate_hash(
-                self.left_folder, self.right_folder
-            )
+            self._hash_method.calculate_hash(self.left_folder, self.right_folder)
             self._diff_folder = DiffFolder(
-                self._hash_content_folder.left_hash,
-                self._hash_content_folder.right_hash,
+                self._hash_method.left_hash,
+                self._hash_method.right_hash,
             )
             self._is_analyzed = True
 

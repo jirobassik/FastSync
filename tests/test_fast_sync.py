@@ -142,6 +142,33 @@ class TestInternalFolders:
             "invalid_yaml.yaml"
         ]
 
+    @pytest.mark.little
+    def test_one_file_another_content_caching(
+        self,
+        caching_fast_sync_fabric,
+        tmp_path,
+    ):
+        """Check missing files in right and left folders, where file with one name but contain another content (caching)"""
+        left_folder = (FIXTURE_DIR_INTERNAL / "OneFileAnotherContent/yaml").as_posix()
+        right_folder = (FIXTURE_DIR_INTERNAL / "Simple1/yaml").as_posix()
+
+        fast_sync = caching_fast_sync_fabric(
+            left_folder,
+            right_folder,
+            path_to_cache=tmp_path,
+        )
+
+        # Fill cache
+        fast_sync.left_missing_files()
+        fast_sync.right_missing_files()
+
+        assert unordered([file.name for file in fast_sync.left_missing_files()]) != [
+            "invalid_yaml.yaml"
+        ]
+        assert unordered([file.name for file in fast_sync.right_missing_files()]) != [
+            "invalid_yaml.yaml"
+        ]
+
     @pytest.mark.filters
     @pytest.mark.little
     @pytest.mark.parametrize(

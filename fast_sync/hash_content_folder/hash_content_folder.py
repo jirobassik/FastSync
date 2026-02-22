@@ -20,7 +20,7 @@ class HashContentFolder:
     left_hash = HashValue()
     right_hash = HashValue()
 
-    def __init__(self, reader: FolderReader | FolderFilterReader):
+    def __init__(self, reader: FolderReader | FolderFilterReader = FolderReader()):
         self._reader = reader
 
     def calculate_hash(self, left_path: Path, right_path: Path):

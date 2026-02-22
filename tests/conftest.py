@@ -2,8 +2,12 @@ from pathlib import Path
 
 import pytest
 
-from fast_sync import FolderFilterReader
-from fast_sync.folder_reader import FolderReader
+from fast_sync import (
+    CacheFolderCreation,
+    FolderFilterReader,
+    HashContentFolder,
+    HashContentFolderCaching,
+)
 from fast_sync.folder_reader.folder_filter_reader import (
     FilterExtensionsFolder,
     FilterFolders,
@@ -18,8 +22,22 @@ FIXTURE_DIR_EXTERNAL = Path().home() / "OS_emulate"
 @pytest.fixture(scope="session")
 def default_fast_sync_fabric():
     def _default_fast_sync_fabric(left_folder, right_folder):
-        reader = FolderReader()
-        fast_sync = FastSync(reader)
+        fast_sync = FastSync()
+        fast_sync.path_setup(left_folder, right_folder)
+        fast_sync.analyze()
+        return fast_sync
+
+    return _default_fast_sync_fabric
+
+
+@pytest.fixture(scope="session")
+def caching_fast_sync_fabric():
+    def _default_fast_sync_fabric(left_folder, right_folder, path_to_cache):
+        fast_sync = FastSync(
+            HashContentFolderCaching(
+                cache_path=CacheFolderCreation(path_to_folder=path_to_cache)
+            )
+        )
         fast_sync.path_setup(left_folder, right_folder)
         fast_sync.analyze()
         return fast_sync
@@ -39,7 +57,7 @@ def filter_reader_fast_sync_fabric():
             FilterFolders(*folders),
             FilterExtensionsFolder(*extensions),
         )
-        fast_sync = FastSync(reader)
+        fast_sync = FastSync(HashContentFolder(reader))
         fast_sync.path_setup(left_folder, right_folder)
         fast_sync.analyze()
         return fast_sync
