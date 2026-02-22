@@ -12,19 +12,22 @@ class ProgressBarHashContentFolderMixin:
     def _create_hash(
         self: HashContentFolder, path_to_main_folder: Path
     ) -> ListHashPathKeyValue:
-        results = []
         with multiprocessing.Pool() as pool:
-            with tqdm(desc=f"Creating hash: {path_to_main_folder}") as pbar:
-                hash_path_add_path_to_main_folder = partial(
-                    self._hash_path, path_to_main_folder=path_to_main_folder
+            hash_path_add_path_to_main_folder = partial(
+                self._hash_path, path_to_main_folder=path_to_main_folder
+            )
+            result = list(
+                tqdm(
+                    iterable=pool.imap_unordered(
+                        hash_path_add_path_to_main_folder,
+                        self._reader.operation(path_to_main_folder),
+                    ),
+                    desc=f"Creating hash: {path_to_main_folder}",
+                    leave=True,
                 )
-                for result in pool.imap_unordered(
-                    hash_path_add_path_to_main_folder,
-                    self._reader.operation(path_to_main_folder),
-                ):
-                    results.append(result)
-                    pbar.update(1)
-        return results
+            )
+
+        return result
 
 
 class ProgressBarFolderSync(FolderSync):
@@ -32,7 +35,6 @@ class ProgressBarFolderSync(FolderSync):
         files_to_copy = missing_files.values()
         progressbar_missing_files = tqdm(
             files_to_copy,
-            total=len(files_to_copy),
             desc="Copying files",
             unit="file",
             position=0,

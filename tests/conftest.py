@@ -21,8 +21,8 @@ FIXTURE_DIR_EXTERNAL = Path().home() / "OS_emulate"
 
 @pytest.fixture(scope="session")
 def default_fast_sync_fabric():
-    def _default_fast_sync_fabric(left_folder, right_folder):
-        fast_sync = FastSync()
+    def _default_fast_sync_fabric(left_folder, right_folder, fast_sync_method=FastSync):
+        fast_sync = fast_sync_method()
         fast_sync.path_setup(left_folder, right_folder)
         fast_sync.analyze()
         return fast_sync

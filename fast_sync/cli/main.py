@@ -2,7 +2,10 @@ import click
 from click import FileError
 from loguru import logger
 
-from fast_sync import CacheFolderCreation, FolderReader
+from fast_sync import (
+    CacheFolderCreation,
+    FolderReader,
+)
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.folder_reader.folder_filter_reader import (
     FilterExtensionsFolder,
@@ -17,12 +20,13 @@ from fast_sync.utils.error import (
     OsPathResolverError,
 )
 
-from .utils import CustomHelp, ProgressBarFastSync, error_output
-from .utils.error_output import PermissionDeniedError
-from .utils.progressbar import (
+from fast_sync.utils.progressbar import (
+    ProgressBarFastSync,
     ProgressBarHashContentFolder,
     ProgressBarHashContentFolderCaching,
 )
+from .utils import CustomHelp, error_output
+from .utils.error_output import PermissionDeniedError
 
 
 @click.group(cls=CustomHelp)
