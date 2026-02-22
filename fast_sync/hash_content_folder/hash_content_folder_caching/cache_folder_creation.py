@@ -26,7 +26,7 @@ class CacheFolderCreation:
         self._path_to_folder = self._path_to_folder / self.default_folder
         if not self._path_to_folder.exists():
             try:
-                self._path_to_folder.mkdir(parents=False, exist_ok=True)
+                self._path_to_folder.mkdir(parents=True, exist_ok=True)
                 logger.info(f"Directory ready: {self._path_to_folder}")
             except PermissionError:
                 logger.error(f"Permission denied: {self._path_to_folder}")
@@ -36,12 +36,8 @@ class CacheFolderCreation:
 class OsPathResolver:
     def resolve_path(self, path: Path | str = None) -> Path:
         if path is None:
-            pathlike = self._get_default_path()
-        else:
-            pathlike = self._get_custom_path(path)
-
-        # self._validate_path(pathlike)
-        return pathlike
+            return self._get_default_path()
+        return self._get_custom_path(path)
 
     @staticmethod
     def _validate_path(path: Path):
@@ -60,9 +56,9 @@ class OsPathResolver:
         else:
             return os_type.value
 
-    @staticmethod
-    def _get_custom_path(path: Path | str) -> Path:
+    def _get_custom_path(self, path: Path | str) -> Path:
         custom_path = Path(path)
+        self._validate_path(custom_path)
         return custom_path
 
 
