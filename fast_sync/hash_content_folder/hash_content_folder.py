@@ -3,6 +3,8 @@ from functools import partial
 from hashlib import md5
 from pathlib import Path
 
+from loguru import logger
+
 from fast_sync import FolderFilterReader, FolderReader
 from fast_sync.utils.error import HashCalculationError
 from fast_sync.utils.types import HashPathKeyValue, ListHashPathKeyValue
@@ -48,6 +50,7 @@ class HashContentFolder:
                 path_to_file.relative_to(path_to_main_folder),
             )
         except PermissionError as error:
+            logger.error(f"Permission denied: {error.filename}")
             raise HashCalculationError(error.filename)
         else:
             value = path_to_file

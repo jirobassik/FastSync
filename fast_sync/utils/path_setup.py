@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from loguru import logger
+
 from fast_sync.utils.error import PathSetupError, ValidationPathError
 
 
@@ -20,9 +22,13 @@ class ValidPath:
     @staticmethod
     def validate(value: Path):
         if not value.exists():
-            raise ValidationPathError(f"Path does not exist: '{value}'")
+            error_message = f"Path does not exist: '{value}'"
+            logger.error(error_message)
+            raise ValidationPathError(error_message)
         if not value.is_dir():
-            raise ValidationPathError(f"Path must be dir, not file: '{value.suffix}'")
+            error_message = f"Path must be dir, not file: '{value.suffix}'"
+            logger.error(error_message)
+            raise ValidationPathError(error_message)
 
 
 class PathSetup:

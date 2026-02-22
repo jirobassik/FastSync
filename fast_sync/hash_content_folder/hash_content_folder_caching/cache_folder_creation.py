@@ -27,10 +27,11 @@ class CacheFolderCreation:
         if not self._path_to_folder.exists():
             try:
                 self._path_to_folder.mkdir(parents=True, exist_ok=True)
-                logger.info(f"Directory ready: {self._path_to_folder}")
+                logger.info(f"Directory for cache data ready: {self._path_to_folder}")
             except PermissionError:
                 logger.error(f"Permission denied: {self._path_to_folder}")
                 raise CacheFolderCreationError(self._path_to_folder)
+        logger.info(f"Directory for cache data already exists: {self._path_to_folder}")
 
 
 class OsPathResolver:
