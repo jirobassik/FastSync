@@ -1,4 +1,7 @@
-from tests.fixtures.fixtures import path_setup
+from tests.fixtures.fixtures import (
+    cache_folder_creation,
+    path_setup,
+)
 from tests.fixtures.fixtures_folder_content import (
     left_folder_nested_simple_structure,
     left_folder_simple_structure,
@@ -18,6 +21,7 @@ from tests.fixtures.fixtures_folder_filled import (
 )
 
 __all__ = [
+    "cache_folder_creation",
     "path_setup",
     "create_base_folder",
     "fill_folder_content",

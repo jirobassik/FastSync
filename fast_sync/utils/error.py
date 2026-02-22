@@ -7,9 +7,24 @@ class HashCalculationError(Exception):
     def __init__(self, filename):
         self.filename = filename
 
+    def __str__(self):
+        return f"Cannot calculate hash at {self.filename}: Permission denied"
 
-class SyncManagerError(AttributeError):
-    pass
+
+class CacheFolderCreationError(Exception):
+    def __init__(self, filename):
+        self.filename = filename
+
+    def __str__(self):
+        return f"Cannot create directory at {self.filename}: Permission denied"
+
+
+class OsPathResolverError(Exception):
+    def __init__(self, filename):
+        self.filename = filename
+
+    def __str__(self):
+        return f"Path not found: {self.filename}"
 
 
 class PathSetupError(ValueError):
@@ -17,4 +32,8 @@ class PathSetupError(ValueError):
 
 
 class ValidationPathError(ValueError):
+    pass
+
+
+class SyncManagerError(AttributeError):
     pass

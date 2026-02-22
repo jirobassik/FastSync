@@ -42,16 +42,16 @@ class ProgressBarFolderSync(FolderSync):
             self.folder_sync(source_folder, destination_folder, missing_file)
 
 
-class ProgressBarHashContentFolderCaching(
+class ProgressBarHashContentFolder(
     ProgressBarHashContentFolderMixin,
-    HashContentFolderCaching,
+    HashContentFolder,
 ):
     pass
 
 
-class ProgressBarHashContentFolder(
+class ProgressBarHashContentFolderCaching(
     ProgressBarHashContentFolderMixin,
-    HashContentFolder,
+    HashContentFolderCaching,
 ):
     pass
 
