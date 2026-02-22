@@ -14,27 +14,36 @@ def home_path() -> Path:
 class CacheFolderCreation:
     default_folder = "FastSync"
 
-    def __init__(self, path_to_folder: Path | str = None):
-        self._path_to_folder = OsPathResolver().resolve_path(path_to_folder)
-        self._create_folder()
+    def __init__(self, path_to_cache: Path | str = None):
+        self._path_to_cache = path_to_cache
 
     @property
-    def path_to_folder(self):
-        return self._path_to_folder
+    def path_to_cache(self):
+        path_to_cache = (
+            OsCachePathResolver().resolve_path(self._path_to_cache)
+            / self.default_folder
+        )
+        self._check_cache_folder_existence(path_to_cache)
 
-    def _create_folder(self):
-        self._path_to_folder = self._path_to_folder / self.default_folder
-        if not self._path_to_folder.exists():
-            try:
-                self._path_to_folder.mkdir(parents=True, exist_ok=True)
-                logger.info(f"Directory for cache data ready: {self._path_to_folder}")
-            except PermissionError:
-                logger.error(f"Permission denied: {self._path_to_folder}")
-                raise CacheFolderCreationError(self._path_to_folder)
-        logger.info(f"Directory for cache data already exists: {self._path_to_folder}")
+        return path_to_cache
+
+    def _check_cache_folder_existence(self, path_to_cache):
+        if not path_to_cache.exists():
+            self._create_cache_folder(path_to_cache)
+        else:
+            logger.info(f"Directory for cache data already exists: {path_to_cache}")
+
+    @staticmethod
+    def _create_cache_folder(path_to_cache):
+        try:
+            path_to_cache.mkdir(parents=True, exist_ok=True)
+            logger.info(f"Directory for cache data ready: {path_to_cache}")
+        except PermissionError:
+            logger.error(f"Permission denied: {path_to_cache}")
+            raise CacheFolderCreationError(path_to_cache)
 
 
-class OsPathResolver:
+class OsCachePathResolver:
     def resolve_path(self, path: Path | str = None) -> Path:
         if path is None:
             return self._get_default_path()
@@ -50,10 +59,10 @@ class OsPathResolver:
     def _get_default_path() -> Path:
         system = platform.system().upper()
         try:
-            os_type = OsTypePath[system]
+            os_type = OsCacheTypePath[system]
         except KeyError:
             logger.warning(f"Unknown OS: {system}, falling back to default style paths")
-            return OsTypePath.default()
+            return OsCacheTypePath.default()
         else:
             return os_type.value
 
@@ -63,7 +72,7 @@ class OsPathResolver:
         return custom_path
 
 
-class OsTypePath(Enum):
+class OsCacheTypePath(Enum):
     WINDOWS = Path(home_path(), "AppData", "Local")
     LINUX = Path(home_path(), ".cache")
     DEFAULT = home_path()

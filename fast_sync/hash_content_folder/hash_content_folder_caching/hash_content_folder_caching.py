@@ -15,7 +15,7 @@ class HashContentFolderCaching(HashContentFolder):
         cache_path: CacheFolderCreation = CacheFolderCreation(),
     ):
         super().__init__(reader)
-        self._cache_path = Cache(cache_path.path_to_folder.as_posix())
+        self._cache_path = Cache(cache_path.path_to_cache.as_posix())
 
     def _hash_path(self, path_to_file: Path, path_to_main_folder: Path):
         filename_without_parent_as_posix = path_to_file.relative_to(
