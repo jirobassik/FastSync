@@ -25,7 +25,7 @@ jobs:
 
       - name: View cache folder Ubuntu
         if: matrix.os == 'ubuntu-latest'
-        run: realpath .cache
+        run: ~/.cache
 
       - name: Set up Python
         run: uv python install
