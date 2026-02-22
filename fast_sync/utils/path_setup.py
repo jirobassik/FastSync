@@ -1,7 +1,9 @@
 from pathlib import Path
 
-from fast_sync.utils.error import PathSetupError, ValidationPathError
 from loguru import logger
+
+from fast_sync.utils.error import PathSetupError, ValidationPathError
+
 
 class ValidPath:
     def __set_name__(self, owner, name):
