@@ -15,6 +15,7 @@ def path_to_config() -> Path:
 
 def init_config() -> Path:
     config_folder = path_to_config()
+    logger.debug(f"Path to config file: {config_folder}")
     config_folder.mkdir(exist_ok=True)
     return config_folder
 

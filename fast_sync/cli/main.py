@@ -38,7 +38,7 @@ from .utils.error_output import PermissionDeniedError
 @click.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name [Affects the output format]")
 @click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
-@config_option(strict=True)
+@config_option(strict=True, roaming=False)
 @click.pass_context
 def fast_sync_cli(ctx, hashing, group, sort, extensions, folders):
     ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
