@@ -10,13 +10,13 @@ from fast_sync.utils.constant import APP_NAME
 
 
 def path_to_config() -> Path:
-    return PlatformDirs(APP_NAME, ensure_exists=True, opinion=False).user_config_path
+    return PlatformDirs(APP_NAME).user_config_path
 
 
 def init_config() -> Path:
     config_folder = path_to_config()
     logger.debug(f"Path to config file: {config_folder}")
-    config_folder.mkdir(exist_ok=True)
+    config_folder.mkdir(parents=True, exist_ok=True)
     return config_folder
 
 
