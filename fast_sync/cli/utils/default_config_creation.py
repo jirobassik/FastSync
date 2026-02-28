@@ -10,7 +10,7 @@ from fast_sync.utils.constant import APP_NAME
 
 
 def path_to_config() -> Path:
-    return PlatformDirs(APP_NAME, ensure_exists=True).user_config_path
+    return PlatformDirs(APP_NAME, ensure_exists=True, opinion=False).user_config_path
 
 
 def init_config() -> Path:
