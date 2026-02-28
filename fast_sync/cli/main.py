@@ -19,24 +19,26 @@ from fast_sync.utils.error import (
     NotValidFilterInput,
     OsPathResolverError,
 )
-
 from fast_sync.utils.progressbar import (
     ProgressBarFastSync,
     ProgressBarHashContentFolder,
     ProgressBarHashContentFolderCaching,
 )
+
 from .utils import CustomHelp, error_output
+from .utils.custom_config_option import config_option
 from .utils.error_output import PermissionDeniedError
 
 
 @click.group(cls=CustomHelp)
-@click.option("--hashing", "-h", is_flag=True, help="Use hash for boost repeat calculations [Warning if the files "
+@click.option("--hashing/--no-hashing", "-h/-Nh", default=False, help="Use hash for boost repeat calculations [Warning if the files "
                                                  "have the same name and different contents, "
                                                  "caching should not be used in this case]")
-@click.option("--group", "-g", is_flag=True, help="Group files by folders [Affects the output format]")
-@click.option("--sort", "-s", is_flag=True, help="Sort files by name [Affects the output format]")
+@click.option("--group/--no-group", "-g/-Ng", default=False, help="Group files by folders [Affects the output format]")
+@click.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name [Affects the output format]")
 @click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
+@config_option(strict=True)
 @click.pass_context
 def fast_sync_cli(ctx, hashing, group, sort, extensions, folders):
     ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
