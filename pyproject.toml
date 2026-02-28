@@ -15,7 +15,7 @@ dependencies = [
     "platformdirs>=4.9.2",
     "pyinstaller>=6.18.0",
     "python-dotenv>=1.2.1",
-    "tomli-w>=1.2.0",
+    "tomlkit>=0.14.0",
     "tqdm>=4.67.1",
 ]
 
@@ -133,5 +133,6 @@ markers = [
     "little: tests with little folders size",
     "big: tests with big folders size",
     "filters: tests with filters content",
-    "local: tests only working locally"
+    "local: tests only working locally",
+    "cli: tests for cli"
 ]

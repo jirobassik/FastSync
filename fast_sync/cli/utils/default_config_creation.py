@@ -1,6 +1,6 @@
 from pathlib import Path
 
-import tomli_w
+import tomlkit
 from loguru import logger
 from platformdirs import PlatformDirs
 
@@ -22,8 +22,8 @@ def init_config() -> Path:
 def write_config():
     try:
         config_file = init_config().joinpath("config.toml")
-        with config_file.open("wb") as cf:
-            tomli_w.dump(CONFIG_DATA, cf)
+        with config_file.open("w") as cf:
+            tomlkit.dump(CONFIG_DATA, cf)
     except PermissionError as e:
         logger.error(f"The configuration file was not created. Reason: {e}")
         raise ConfigFileCreationError(filename=e.filename)
