@@ -76,6 +76,9 @@ jobs:
           
           echo Test bin
           $HOME/.local/bin/fs --help
+          
+          echo Test bin with context 
+          $HOME/.local/bin/fs view-help missing
 
       - name: Test bin Windows
         if: matrix.os == 'windows-latest'
@@ -85,6 +88,9 @@ jobs:
           
           echo Test bin
           fs --help
+          
+          echo Test bin with context 
+          fs view-help missing
         shell: cmd
 
       - name: Archive Artifact
