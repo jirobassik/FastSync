@@ -22,7 +22,7 @@ def init_config() -> Path:
 def write_config():
     try:
         config_file = init_config().joinpath("config.toml")
-        with config_file.open("w") as cf:
+        with config_file.open("w", encoding="utf-8") as cf:
             tomlkit.dump(CONFIG_DATA, cf)
     except PermissionError as e:
         logger.error(f"The configuration file was not created. Reason: {e}")
