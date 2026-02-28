@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Iterable, Any
+from typing import Iterable
 
 import requests
 from boltons.urlutils import URL
@@ -8,7 +8,7 @@ from click import get_app_dir, get_current_context
 from click_extra import ConfigOption
 from click_extra.decorators import decorator_factory, option
 from extra_platforms import is_windows
-from wcmatch import glob, fnmatch
+from wcmatch import glob
 
 from fast_sync.utils.constant import APP_NAME
 
@@ -47,55 +47,20 @@ class CliNameConfigOption(ConfigOption):
                     if not file_path.is_file():
                         continue
                     files_found += 1
-                    yield file_path, file_path.read_bytes()
+                    yield file_path, self.trying_various_encodings(file_path)
 
         if not files_found:
             raise FileNotFoundError(f"No file found matching {pattern}")
 
-    def read_and_parse_conf(
-        self,
-        pattern: str,
-    ) -> tuple[Path | URL, dict[str, Any]] | tuple[None, None]:
-        """Search for a parseable configuration file.
-
-        Returns the location and data structure of the first configuration matching the
-        ``pattern``.
-
-        Only return the first match that:
-
-        - exists,
-        - is a file,
-        - is not empty,
-        - match file format patterns,
-        - can be parsed successfully, and
-        - produce a non-empty data structure.
-
-        Raises ``FileNotFoundError`` if no configuration file was found matching the
-        criteria above.
-
-        Returns ``(None, None)`` if files were found but none could be parsed.
-        """
-        for location, content in self.search_and_read_file(pattern):
-            if isinstance(location, URL):
-                filename = location.path_parts[-1]
-            else:
-                filename = location.name
-
-            # Match file with formats.
-            matching_formats = tuple(
-                fmt
-                for fmt, patterns in self.file_format_patterns.items()
-                if fnmatch.fnmatch(filename, patterns, flags=self.file_pattern_flags)
-            )
-
-            if not matching_formats:
+    @staticmethod
+    def trying_various_encodings(file_path):
+        encodings_to_try = ["utf-8", "utf-16", "utf-16-le", "utf-16-be", "latin-1"]
+        for encoding in encodings_to_try:
+            try:
+                return file_path.read_text(encoding=encoding)
+            except UnicodeDecodeError:
                 continue
-
-            for conf in self.parse_conf(content, formats=matching_formats):
-                if conf:
-                    return location, conf
-
-        return None, None
+        raise UnicodeDecodeError
 
 
 config_option = decorator_factory(dec=option, cls=CliNameConfigOption)
