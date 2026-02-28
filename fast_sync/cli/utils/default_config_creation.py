@@ -6,7 +6,6 @@ from platformdirs import PlatformDirs
 
 from fast_sync.cli.utils.constant import CONFIG_DATA
 from fast_sync.cli.utils.errors import ConfigFileCreationError
-from fast_sync.utils.constant import APP_NAME
 
 
 def path_to_config() -> Path:
