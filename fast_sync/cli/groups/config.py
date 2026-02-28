@@ -22,4 +22,4 @@ def init():
 
 @config.command(name="open", help="Open config file")
 def open_():
-    click.launch(path_to_config().as_uri())
+    click.launch(path_to_config().as_uri(), locate=True)
