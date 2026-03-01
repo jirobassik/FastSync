@@ -1,7 +1,7 @@
 import pytest
 
 from fast_sync import SyncManager
-from fast_sync.utils.error import HashCalculationError, ValidationPathError
+from fast_sync.utils.errors import HashCalculationError, ValidationPathError
 
 
 def test_continue_execute_with_not_valid_path(internal_folders_simple):

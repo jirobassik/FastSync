@@ -3,7 +3,7 @@ from .base import FolderDecorator, FolderReaderComponent
 
 class FilterFolders(FolderDecorator):
     """
-    Всегда должен указываться первым в аргументах для FolderFilterReader
+    Must always be specified first in arguments to FolderFilterReader.
     """
 
     def operation(self):

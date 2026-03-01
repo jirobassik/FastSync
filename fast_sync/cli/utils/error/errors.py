@@ -1,3 +1,8 @@
+from gettext import gettext as _
+
+from click import FileError
+
+
 class ConfigFileCreationError(Exception):
     def __init__(self, message, filename):
         self.message = message
@@ -12,3 +17,10 @@ class ConfigFileCreationError(Exception):
 
 class OutputFormaterError(Exception):
     pass
+
+
+class PermissionDeniedError(FileError):
+    def format_message(self) -> str:
+        return _("Could not open path {filename!r}: {message}").format(
+            filename=self.ui_filename, message=self.message
+        )

@@ -1,7 +1,8 @@
 from typing import Callable
 
-from fast_sync.cli.utils.error.error_output import PermissionDeniedError
-from fast_sync.utils.error import HashCalculationError
+from fast_sync.utils.errors import HashCalculationError
+
+from .errors import PermissionDeniedError
 
 
 def error_handling(func: Callable):
