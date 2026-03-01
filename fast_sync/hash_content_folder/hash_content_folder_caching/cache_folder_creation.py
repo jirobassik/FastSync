@@ -1,30 +1,21 @@
-import platform
-from enum import Enum
 from pathlib import Path
 
 from loguru import logger
+from platformdirs import PlatformDirs
 
+from fast_sync.utils.constant import APP_NAME
 from fast_sync.utils.errors import CacheFolderCreationError, OsPathResolverError
 
 
-def home_path() -> Path:
-    return Path.home()
-
-
 class CacheFolderCreation:
-    default_folder = "FastSync"
-
     def __init__(self, path_to_cache: Path | str = None):
         self._path_to_cache = path_to_cache
 
     @property
     def path_to_cache(self):
-        path_to_cache = (
-            OsCachePathResolver().resolve_path(self._path_to_cache)
-            / self.default_folder
-        )
-        self._check_cache_folder_existence(path_to_cache)
+        path_to_cache = OsCachePathResolver().resolve_path(self._path_to_cache)
 
+        self._check_cache_folder_existence(path_to_cache)
         return path_to_cache
 
     def _check_cache_folder_existence(self, path_to_cache):
@@ -57,26 +48,9 @@ class OsCachePathResolver:
 
     @staticmethod
     def _get_default_path() -> Path:
-        system = platform.system().upper()
-        try:
-            os_type = OsCacheTypePath[system]
-        except KeyError:
-            logger.warning(f"Unknown OS: {system}, falling back to default style paths")
-            return OsCacheTypePath.default()
-        else:
-            return os_type.value
+        return PlatformDirs(appname=APP_NAME, appauthor=False).user_cache_path
 
     def _get_custom_path(self, path: Path | str) -> Path:
         custom_path = Path(path)
         self._validate_path(custom_path)
-        return custom_path
-
-
-class OsCacheTypePath(Enum):
-    WINDOWS = Path(home_path(), "AppData", "Local")
-    LINUX = Path(home_path(), ".cache")
-    DEFAULT = home_path()
-
-    @classmethod
-    def default(cls):
-        return cls.DEFAULT.value
+        return custom_path / APP_NAME
