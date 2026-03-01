@@ -5,7 +5,7 @@ import click_extra
 
 from fast_sync.cli.main import fast_sync_cli
 from fast_sync.cli.utils.decorators import path_setup_wrapper
-from fast_sync.cli.utils.error_handling import error_handling
+from fast_sync.cli.utils.error.error_handling import error_handling
 from fast_sync.cli.utils.output_formaters.formaters import white_bolt_text
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.main import FastSync

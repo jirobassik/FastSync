@@ -1,0 +1,66 @@
+import os
+from pathlib import Path
+from typing import Iterable
+
+import requests
+from boltons.urlutils import URL
+from click import get_app_dir, get_current_context
+from click_extra import ConfigOption
+from click_extra.decorators import decorator_factory, option
+from extra_platforms import is_windows
+from wcmatch import glob
+
+from fast_sync.utils.constant import APP_NAME
+
+
+class CliNameConfigOption(ConfigOption):
+    def default_pattern(self) -> str:
+        ctx = get_current_context()
+        cli_name = ctx.find_root().info_name
+        if not cli_name:
+            raise ValueError
+        app_dir = Path(
+            get_app_dir(APP_NAME, roaming=self.roaming, force_posix=self.force_posix),
+        ).resolve()
+        return f"{app_dir}{os.path.sep}{self.file_pattern}"
+
+    def search_and_read_file(
+        self, pattern: str
+    ) -> Iterable[tuple[Path | URL, str | bytes]]:
+        files_found = 0
+        location = URL(pattern)
+        location.normalize()
+        if location and location.scheme in ("http", "https"):
+            with requests.get(str(location)) as response:
+                if response.ok:
+                    files_found += 1
+                    yield location, response.text
+
+        else:
+            if is_windows():
+                win_path = Path(pattern)
+                pattern = str(win_path.as_posix())
+
+            for search_pattern in self.parent_patterns(pattern):
+                for file in glob.iglob(search_pattern, flags=self.search_pattern_flags):
+                    file_path = Path(file).resolve()
+                    if not file_path.is_file():
+                        continue
+                    files_found += 1
+                    yield file_path, self.trying_various_encodings(file_path)
+
+        if not files_found:
+            raise FileNotFoundError(f"No file found matching {pattern}")
+
+    @staticmethod
+    def trying_various_encodings(file_path):
+        encodings_to_try = ["utf-8", "utf-16", "utf-16-le", "utf-16-be", "latin-1"]
+        for encoding in encodings_to_try:
+            try:
+                return file_path.read_text(encoding=encoding)
+            except UnicodeDecodeError:
+                continue
+        raise UnicodeDecodeError
+
+
+config_option = decorator_factory(dec=option, cls=CliNameConfigOption)

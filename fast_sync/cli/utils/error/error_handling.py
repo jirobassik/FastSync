@@ -1,6 +1,6 @@
 from typing import Callable
 
-from fast_sync.cli.utils.error_output import PermissionDeniedError
+from fast_sync.cli.utils.error.error_output import PermissionDeniedError
 from fast_sync.utils.error import HashCalculationError
 
 
