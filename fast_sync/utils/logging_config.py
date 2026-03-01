@@ -25,7 +25,7 @@ def setup_logging():
     )
     prod_format = "{time:YYYY-MM-DD HH:mm:ss} | {level} | {name}:{function} | {message}"
 
-    if os.getenv("ENV_TYPE", "debug") == "debug":
+    if os.getenv("ENV_TYPE", "prod") == "debug":
         logger.add(sys.stderr, level="DEBUG", format=dev_format, colorize=True)
         logger.info("Development mode: logging is configured to output to the console.")
     else:
