@@ -16,7 +16,7 @@ def sorted_output(missing_files: list[Path]):
     echo_files(sorted(missing_files))
 
 
-def white_bolt_text(text: str | int):
+def white_bolt_text(text: str | int | Path):
     return click.style(text, fg="white", bold=True)
 
 

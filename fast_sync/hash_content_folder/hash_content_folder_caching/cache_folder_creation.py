@@ -3,7 +3,7 @@ from pathlib import Path
 from loguru import logger
 from platformdirs import PlatformDirs
 
-from fast_sync.utils.constant import APP_NAME
+from fast_sync.utils.constant import APP_NAME, CACHE_FILE
 from fast_sync.utils.errors import CacheFolderCreationError, OsPathResolverError
 
 
@@ -54,3 +54,11 @@ class OsCachePathResolver:
         custom_path = Path(path)
         self._validate_path(custom_path)
         return custom_path / APP_NAME
+
+
+def default_path_to_cache() -> Path:
+    return OsCachePathResolver().resolve_path()
+
+
+def exist_file_cache(path: Path) -> bool:
+    return (path / CACHE_FILE).exists()
