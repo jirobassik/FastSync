@@ -1,5 +1,5 @@
 import click
-from click import FileError
+from click import Context, FileError
 from loguru import logger
 
 from fast_sync import (
@@ -14,7 +14,7 @@ from fast_sync.folder_reader.folder_filter_reader import (
 from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import (
     FolderFilterReader,
 )
-from fast_sync.utils.error import (
+from fast_sync.utils.errors import (
     CacheFolderCreationError,
     NotValidFilterInput,
     OsPathResolverError,
@@ -27,7 +27,7 @@ from fast_sync.utils.progressbar import (
 
 from .utils import CustomHelp, error_output
 from .utils.custom_config_option import config_option
-from .utils.error.error_output import PermissionDeniedError
+from .utils.error.errors import PermissionDeniedError
 
 
 @click.group(cls=CustomHelp)
@@ -40,7 +40,7 @@ from .utils.error.error_output import PermissionDeniedError
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
 @config_option(strict=True, roaming=False)
 @click.pass_context
-def fast_sync_cli(ctx, hashing, group, sort, extensions, folders):
+def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
     ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
 
     click.echo("---" * 30)

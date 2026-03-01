@@ -2,7 +2,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from fast_sync.utils.error import PathSetupError, ValidationPathError
+from fast_sync.utils.errors import PathSetupError, ValidationPathError
 
 
 class ValidPath:

@@ -4,7 +4,7 @@ from fast_sync import (
     HashContentFolder,
 )
 from fast_sync.hash_content_folder import HashContentFolderCaching
-from fast_sync.utils.error import SyncManagerError
+from fast_sync.utils.errors import SyncManagerError
 from fast_sync.utils.path_setup import PathSetup
 
 

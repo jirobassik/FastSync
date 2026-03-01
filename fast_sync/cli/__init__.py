@@ -1,6 +1,6 @@
 from .groups import missing, sync, config
 from .utils.custom_help import CustomHelp
-from .utils.support_commands import view_help_page_given_command
+from fast_sync.cli.commands import view_help_page_given_command
 
 __all__ = [
     "missing",

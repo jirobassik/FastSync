@@ -3,7 +3,7 @@ import pytest
 from fast_sync.hash_content_folder.hash_content_folder_caching.cache_folder_creation import (
     OsCachePathResolver,
 )
-from fast_sync.utils.error import CacheFolderCreationError, OsPathResolverError
+from fast_sync.utils.errors import CacheFolderCreationError, OsPathResolverError
 
 from .conftest import FIXTURE_DIR_INTERNAL
 

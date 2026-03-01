@@ -6,7 +6,7 @@ from pathlib import Path
 from loguru import logger
 
 from fast_sync import FolderFilterReader, FolderReader
-from fast_sync.utils.error import HashCalculationError
+from fast_sync.utils.errors import HashCalculationError
 from fast_sync.utils.types import HashPathKeyValue, ListHashPathKeyValue
 
 

@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from fast_sync.utils.error import PathSetupError, ValidationPathError
+from fast_sync.utils.errors import PathSetupError, ValidationPathError
 
 
 def test_attr_before_path_setup(path_setup):
