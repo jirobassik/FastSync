@@ -5,7 +5,7 @@ from loguru import logger
 from platformdirs import PlatformDirs
 
 from fast_sync.cli.utils.constant import CONFIG_DATA
-from fast_sync.cli.utils.errors import ConfigFileCreationError
+from fast_sync.cli.utils.error.errors import ConfigFileCreationError
 from fast_sync.utils.constant import APP_NAME
 
 
@@ -25,9 +25,9 @@ def write_config():
         config_file = init_config().joinpath("config.toml")
         with config_file.open("w", encoding="utf-8") as cf:
             tomlkit.dump(CONFIG_DATA, cf)
-    except PermissionError as e:
+    except (PermissionError, FileNotFoundError) as e:
         logger.error(f"The configuration file was not created. Reason: {e}")
-        raise ConfigFileCreationError(filename=e.filename)
+        raise ConfigFileCreationError(message=e.strerror, filename=e.filename) from e
     else:
         logger.info(
             f"The configuration file was successfully created at the following path: {config_file}"

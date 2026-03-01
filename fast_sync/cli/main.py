@@ -27,7 +27,7 @@ from fast_sync.utils.progressbar import (
 
 from .utils import CustomHelp, error_output
 from .utils.custom_config_option import config_option
-from .utils.error_output import PermissionDeniedError
+from .utils.error.error_output import PermissionDeniedError
 
 
 @click.group(cls=CustomHelp)

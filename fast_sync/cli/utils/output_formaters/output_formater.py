@@ -2,7 +2,7 @@ from pathlib import Path
 
 import click
 
-from fast_sync.cli.utils.output_formaters.errors import OutputFormaterError
+from fast_sync.cli.utils.error.errors import OutputFormaterError
 from fast_sync.cli.utils.output_formaters.formaters import (
     echo_files,
     grouped_output,
