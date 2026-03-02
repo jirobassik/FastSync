@@ -46,17 +46,25 @@ def caching_fast_sync_fabric():
 
 
 @pytest.fixture(scope="session")
-def filter_reader_fast_sync_fabric():
+def filter_reader_fabric():
+    def _filter_reader_fabric(folders: tuple = (), extensions: tuple = ()):
+        return FolderFilterReader(
+            FilterFolders(*folders),
+            FilterExtensionsFolder(*extensions),
+        )
+
+    return _filter_reader_fabric
+
+
+@pytest.fixture(scope="session")
+def filter_reader_fast_sync_fabric(filter_reader_fabric):
     def _filter_reader_fast_sync_fabric(
         left_folder,
         right_folder,
         folders: tuple,
         extensions: tuple,
     ):
-        reader = FolderFilterReader(
-            FilterFolders(*folders),
-            FilterExtensionsFolder(*extensions),
-        )
+        reader = filter_reader_fabric(folders, extensions)
         fast_sync = FastSync(HashContentFolder(reader))
         fast_sync.path_setup(left_folder, right_folder)
         fast_sync.analyze()

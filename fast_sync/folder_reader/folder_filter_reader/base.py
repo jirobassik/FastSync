@@ -25,6 +25,8 @@ class FolderRecursiveReaderComponent(ReaderComponent):
 
 
 class FilterValues:
+    priority: int = 1
+
     def __init__(self, *args):
         self.filter_values = args
 
