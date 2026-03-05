@@ -1,7 +1,7 @@
 import pytest
 
 from fast_sync import SyncManager
-from fast_sync.utils.errors import HashCalculationError, ValidationPathError
+from fast_sync.utils.errors import HashContentFolderError, ValidationPathError
 
 
 def test_continue_execute_with_not_valid_path(internal_folders_simple):
@@ -16,6 +16,6 @@ def test_continue_execute_with_not_valid_path(internal_folders_simple):
 def test_hash_calculation_error(internal_folders_simple):
     left_folder, right_folder = internal_folders_simple(left_f="PermError")
     sync_manager = SyncManager()
-    with pytest.raises(HashCalculationError):
+    with pytest.raises(HashContentFolderError):
         sync_manager.path_setup(left_folder, right_folder)
         sync_manager.analyze()

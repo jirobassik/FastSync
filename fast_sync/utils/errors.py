@@ -3,12 +3,14 @@ class NotValidFilterInput(Exception):
         return "Not valid filter input"
 
 
-class HashCalculationError(Exception):
-    def __init__(self, filename):
-        self.filename = filename
+class HashContentFolderError(Exception):
+    def __init__(self, message, err_name="Undefined error", error_class=None):
+        self.message = message
+        self.err_name = err_name
+        self.error_class = error_class
 
     def __str__(self):
-        return f"Cannot calculate hash at {self.filename}: Permission denied"
+        return f"{self.message}: {self.err_name}"
 
 
 class CacheFolderCreationError(Exception):

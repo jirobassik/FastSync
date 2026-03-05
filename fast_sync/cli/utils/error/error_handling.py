@@ -1,6 +1,6 @@
 from typing import Callable
 
-from fast_sync.utils.errors import HashCalculationError
+from fast_sync.utils.errors import HashContentFolderError
 
 from .errors import PermissionDeniedError
 
@@ -8,5 +8,5 @@ from .errors import PermissionDeniedError
 def error_handling(func: Callable):
     try:
         func()
-    except HashCalculationError as e:
-        raise PermissionDeniedError(e.filename, hint="Permission denied")
+    except HashContentFolderError as e:
+        raise PermissionDeniedError(e.error_class.filename, hint="Permission denied")

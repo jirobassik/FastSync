@@ -5,6 +5,9 @@ class FolderFilterReader:
     def __init__(self, *args: FolderDecorator):
         self.filters = args
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(filters={self._filters!r})"
+
     @property
     def filters(self):
         return self._filters

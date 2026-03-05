@@ -2,6 +2,7 @@ from pathlib import Path
 
 from loguru import logger
 
+from fast_sync.utils.custom_repr import path_setup_repr
 from fast_sync.utils.errors import PathSetupError, ValidationPathError
 
 
@@ -11,7 +12,7 @@ class ValidPath:
 
     def __get__(self, instance, owner) -> Path:
         if (setuped_path := instance.__dict__.get(self._name)) is None:
-            raise PathSetupError("Path not setup. Use `.setup_paths`")
+            raise PathSetupError("Path not setup. Use `.path_setup`")
         return setuped_path
 
     def __set__(self, instance, value: str | Path):
@@ -34,6 +35,13 @@ class ValidPath:
 class PathSetup:
     left_folder: Path = ValidPath()
     right_folder: Path = ValidPath()
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}"
+            f"(left_folder={path_setup_repr.repr_lazy_attr(self, 'left_folder')}, "
+            f"right_folder={path_setup_repr.repr_lazy_attr(self, 'right_folder')})"
+        )
 
     def path_setup(self, left_path: str | Path, right_path: str | Path):
         self.left_folder = left_path
