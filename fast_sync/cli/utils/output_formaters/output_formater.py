@@ -12,9 +12,12 @@ from fast_sync.cli.utils.output_formaters.formaters import (
 
 
 class OutputFormater:
-    def __init__(self, sorted_=False, grouped=False):
+    def __init__(self, sorted_=False, grouped=False, **kwargs):
         self.sorted_ = sorted_
         self.grouped = grouped
+        self.filters = kwargs
+
+        self._filters_output()
 
     def __call__(
         self,
@@ -22,6 +25,7 @@ class OutputFormater:
         missing_folder: Path,
         reference_folder: Path = None,
     ):
+
         if not missing_files:
             click.secho(
                 f"\n🗹  No missing files found in {white_bolt_text(missing_folder.name)}",
@@ -58,3 +62,10 @@ class OutputFormater:
         if reference_folder is None:
             raise OutputFormaterError("Reference folder not provided")
         grouped_output(missing_files, reference_folder)
+
+    def _filters_output(self):
+        if any(self.filters.values()):
+            click.secho("\nFilters:", fg="green")
+            for key, value in self.filters.items():
+                if value:
+                    click.echo(f" - {white_bolt_text(key)}: {', '.join(value)}")
