@@ -11,7 +11,7 @@ class ValidPath:
 
     def __get__(self, instance, owner) -> Path:
         if (setuped_path := instance.__dict__.get(self._name)) is None:
-            raise PathSetupError("Path not setup. Use `.setup_paths`")
+            raise PathSetupError("Path not setup. Use `.path_setup`")
         return setuped_path
 
     def __set__(self, instance, value: str | Path):
@@ -34,6 +34,11 @@ class ValidPath:
 class PathSetup:
     left_folder: Path = ValidPath()
     right_folder: Path = ValidPath()
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}({self.left_folder=!r}, {self.right_folder=!r}"
+        )
 
     def path_setup(self, left_path: str | Path, right_path: str | Path):
         self.left_folder = left_path

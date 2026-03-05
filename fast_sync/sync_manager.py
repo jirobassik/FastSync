@@ -20,6 +20,12 @@ class SyncManager(PathSetup):
         self._folder_sync = None
         self._is_analyzed = False
 
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}({self._hash_method=!r}, "
+            f"{self._diff_folder=!r}, {self._folder_sync=!r}, {self._is_analyzed=!r})"
+        )
+
     def analyze(self):
         if not self._is_analyzed:
             self._hash_method.calculate_hash(self.left_folder, self.right_folder)
