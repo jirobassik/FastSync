@@ -41,10 +41,13 @@ from .utils.error.errors import PermissionDeniedError
 @config_option(strict=True, roaming=False)
 @click.pass_context
 def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
-    ctx.meta["output_formater"] = OutputFormater(grouped=group, sorted_=sort)
-
     click.echo("---" * 30)
     click.secho("Fast sync started", fg="green", bold=True)
+
+    ctx.meta["output_formater"] = OutputFormater(
+        grouped=group, sorted_=sort, extensions=extensions, folders=folders
+    )
+
     try:
         reader = FolderReader()
         if extensions or folders:
