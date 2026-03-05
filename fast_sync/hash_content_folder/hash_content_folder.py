@@ -1,12 +1,13 @@
 import multiprocessing
-import reprlib
 from functools import partial
 from hashlib import md5
 from pathlib import Path
+from typing import Self
 
 from loguru import logger
 
 from fast_sync import FolderFilterReader, FolderReader
+from fast_sync.utils.custom_repr import hash_repr
 from fast_sync.utils.errors import HashContentFolderError
 from fast_sync.utils.types import HashPathKeyValue, ListHashPathKeyValue
 
@@ -24,9 +25,6 @@ class HashValue:
             )
 
 
-custom_repr = reprlib.Repr(maxlist=2)
-
-
 class HashContentFolder:
     left_hash = HashValue()
     right_hash = HashValue()
@@ -36,10 +34,13 @@ class HashContentFolder:
 
     def __repr__(self):
         return (
-            f"{self.__class__.__name__}(left_hash={custom_repr.repr(self.left_hash)})"
+            f"{self.__class__.__name__}"
+            f"(left_hash={hash_repr.repr_lazy_attr(self, 'left_hash')}, "
+            f"right_hash={hash_repr.repr_lazy_attr(self, 'right_hash')}, "
+            f"reader={self._reader})"
         )
 
-    def calculate_hash(self, left_path: Path, right_path: Path):
+    def calculate_hash(self, left_path: Path, right_path: Path) -> Self:
         self.left_hash = self._create_hash(left_path)
         self.right_hash = self._create_hash(right_path)
         return self
@@ -66,7 +67,8 @@ class HashContentFolder:
         except PermissionError as error:
             logger.error(f"Permission denied: {error.filename}")
             raise HashContentFolderError(
-                message=f"Cannot calculate hash at {error.filename}:{error.strerror}",
+                f"Cannot calculate hash at {error.filename}:{error.strerror}",
+                error_class=error,
             )
         else:
             value = path_to_file

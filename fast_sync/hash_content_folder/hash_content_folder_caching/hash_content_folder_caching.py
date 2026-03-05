@@ -15,15 +15,18 @@ class HashContentFolderCaching(HashContentFolder):
         cache_path: CacheFolderCreation = CacheFolderCreation(),
     ):
         super().__init__(reader)
-        self._cache_path = Cache(cache_path.path_to_cache.as_posix())
+        self._cache = Cache(cache_path.path_to_cache.as_posix())
+
+    def __repr__(self):
+        return f"{super().__repr__()[:-1]}, cache={self._cache.__class__.__name__})"
 
     def _hash_path(self, path_to_file: Path, path_to_main_folder: Path):
         filename_without_parent_as_posix = path_to_file.relative_to(
             path_to_main_folder
         ).as_posix()
-        if filename_without_parent_as_posix not in self._cache_path:
+        if filename_without_parent_as_posix not in self._cache:
             key, _ = super()._hash_path(path_to_file, path_to_main_folder)
-            self._cache_path.set(key=filename_without_parent_as_posix, value=key)
+            self._cache.set(key=filename_without_parent_as_posix, value=key)
             return key, path_to_file
         else:
-            return self._cache_path.get(filename_without_parent_as_posix), path_to_file
+            return self._cache.get(filename_without_parent_as_posix), path_to_file

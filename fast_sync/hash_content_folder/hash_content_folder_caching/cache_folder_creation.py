@@ -4,12 +4,16 @@ from loguru import logger
 from platformdirs import PlatformDirs
 
 from fast_sync.utils.constant import APP_NAME, CACHE_FILE
+from fast_sync.utils.custom_repr import path_repr
 from fast_sync.utils.errors import CacheFolderCreationError, OsPathResolverError
 
 
 class CacheFolderCreation:
     def __init__(self, path_to_cache: Path | str = None):
         self._path_to_cache = path_to_cache
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(path_to_cache={path_repr.repr(self._path_to_cache)})"
 
     @property
     def path_to_cache(self):

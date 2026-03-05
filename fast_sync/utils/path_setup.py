@@ -2,6 +2,7 @@ from pathlib import Path
 
 from loguru import logger
 
+from fast_sync.utils.custom_repr import path_setup_repr
 from fast_sync.utils.errors import PathSetupError, ValidationPathError
 
 
@@ -37,7 +38,9 @@ class PathSetup:
 
     def __repr__(self):
         return (
-            f"{self.__class__.__name__}({self.left_folder=!r}, {self.right_folder=!r}"
+            f"{self.__class__.__name__}"
+            f"(left_folder={path_setup_repr.repr_lazy_attr(self, 'left_folder')}, "
+            f"right_folder={path_setup_repr.repr_lazy_attr(self, 'right_folder')})"
         )
 
     def path_setup(self, left_path: str | Path, right_path: str | Path):

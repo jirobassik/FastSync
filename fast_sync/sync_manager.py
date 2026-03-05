@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fast_sync import (
     DiffFolder,
     FolderSync,
@@ -16,14 +18,17 @@ class SyncManager(PathSetup):
         hash_method: HashContentFolder | HashContentFolderCaching = HashContentFolder(),
     ):
         self._hash_method = hash_method
-        self._diff_folder = None
-        self._folder_sync = None
+        self._diff_folder: Optional[DiffFolder] = None
+        self._folder_sync: Optional[FolderSync] = None
         self._is_analyzed = False
 
     def __repr__(self):
         return (
-            f"{self.__class__.__name__}({self._hash_method=!r}, "
-            f"{self._diff_folder=!r}, {self._folder_sync=!r}, {self._is_analyzed=!r})"
+            f"{self.__class__.__name__}"
+            f"(hash_method={self._hash_method}, "
+            f"diff_folder={self._diff_folder}, "
+            f"folder_sync={self._folder_sync}, "
+            f"is_analyzed={self._is_analyzed})"
         )
 
     def analyze(self):
@@ -50,11 +55,11 @@ class SyncManager(PathSetup):
     @property
     def diff_folder(self) -> DiffFolder:
         if self._diff_folder is None:
-            raise SyncManagerError("Call analyze() method first")
+            raise SyncManagerError("Call `.analyze()` method first")
         return self._diff_folder
 
     @property
     def folder_sync(self) -> FolderSync:
         if self._folder_sync is None:
-            raise SyncManagerError("Call prepare_sync() method first")
+            raise SyncManagerError("Call `.prepare_sync()` method first")
         return self._folder_sync

@@ -1,5 +1,6 @@
 from typing import Callable
 
+from fast_sync.utils.custom_repr import diff_folder_repr
 from fast_sync.utils.types import ListHashPathKeyValue
 
 
@@ -13,6 +14,13 @@ class DiffFolder:
     ):
         self._left_hash_mapping = dict(left_hash)
         self._right_hash_mapping = dict(right_hash)
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"left_hash_mapping={diff_folder_repr.repr(self._left_hash_mapping)}, "
+            f"right_hash_mapping={diff_folder_repr.repr(self._right_hash_mapping)}"
+        )
 
     @property
     def missing_files_in_left_folder(self):

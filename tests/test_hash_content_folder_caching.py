@@ -9,7 +9,7 @@ def test_creation_cache_file(tmp_path, cache_folder_creation):
     actual_path = Path(
         HashContentFolderCaching(
             cache_path=cache_folder_creation(tmp_path)
-        )._cache_path.directory,
+        )._cache.directory,
         "cache.db",
     )
     assert actual_path.exists()

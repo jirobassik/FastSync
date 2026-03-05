@@ -53,6 +53,9 @@ class FolderDecorator(FilterValues, Component):
         self._component = component
         return self
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(filter_values={self._filter_values!r})"
+
     @property
     def component(self) -> Component:
         return self._component

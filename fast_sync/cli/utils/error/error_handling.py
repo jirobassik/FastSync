@@ -9,4 +9,4 @@ def error_handling(func: Callable):
     try:
         func()
     except HashContentFolderError as e:
-        raise PermissionDeniedError(e.message, hint="Permission denied")
+        raise PermissionDeniedError(e.error_class.filename, hint="Permission denied")

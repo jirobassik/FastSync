@@ -2,6 +2,7 @@ import shutil
 from pathlib import Path
 
 from fast_sync import DiffFolder
+from fast_sync.utils.custom_repr import path_repr
 
 
 class FolderSync:
@@ -11,6 +12,14 @@ class FolderSync:
         self._left_path = left_path
         self._right_path = right_path
         self._diff_folder = diff_folder
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"left_path={path_repr.repr(self._left_path)}, "
+            f"right_path={path_repr.repr(self._right_path)}, "
+            f"diff_folder={self._diff_folder})"
+        )
 
     def left_sync(self):
         self._sync(

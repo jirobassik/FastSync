@@ -4,13 +4,10 @@ class NotValidFilterInput(Exception):
 
 
 class HashContentFolderError(Exception):
-    def __init__(self, message, err_name="Undefined error", **kwargs):
-        print(kwargs)
-        for key, value in kwargs.items():
-            self.__setattr__(key, value)
-
+    def __init__(self, message, err_name="Undefined error", error_class=None):
         self.message = message
         self.err_name = err_name
+        self.error_class = error_class
 
     def __str__(self):
         return f"{self.message}: {self.err_name}"
