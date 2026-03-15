@@ -50,29 +50,29 @@ class ConfigureFastSyncDefault:
 class ConfigureFastSyncDepInj:
     @staticmethod
     def configure_fast_sync_dep_inj(fast_sync_method: FastSync):
-        return Container().fast_sync
+        return Container().fast_sync.fast_sync_application
 
     @staticmethod
     def configure_filter_reader_fast_sync_dep_inj(
         folders: tuple = (), extensions: tuple = ()
     ):
         fast_sync_container = Container(reader_type="filter_reader")
-        fast_sync_container.filter_extensions.set_args(*extensions)
-        fast_sync_container.filter_folder.set_args(*folders)
-        return fast_sync_container.fast_sync()
+        fast_sync_container.reader.filter_extensions.set_args(*extensions)
+        fast_sync_container.reader.filter_folder.set_args(*folders)
+        return fast_sync_container.fast_sync.fast_sync_application()
 
     @staticmethod
     def configure_caching_fast_sync_dep_inj(path_to_cache):
         fast_sync_container = Container(hash_type="cache_hash")
         fast_sync_container.cache(path_to_cache=path_to_cache)
-        return fast_sync_container.fast_sync()
+        return fast_sync_container.fast_sync.fast_sync_application()
 
     @staticmethod
     def configure_filter_reader_dep_inj(folders: tuple = (), extensions: tuple = ()):
         fast_sync_container = Container()
-        fast_sync_container.filter_extensions.set_args(*extensions)
-        fast_sync_container.filter_folder.set_args(*folders)
-        return fast_sync_container.folder_readers.filter_reader()
+        fast_sync_container.reader.filter_extensions.set_args(*extensions)
+        fast_sync_container.reader.filter_folder.set_args(*folders)
+        return fast_sync_container.reader.folder_readers.filter_reader()
 
 
 configure_fast_sync_default_class = ConfigureFastSyncDefault()

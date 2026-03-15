@@ -56,5 +56,5 @@ def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
     except OsPathResolverError as e:
         raise FileError(e.filename, hint="Try another path")
     else:
-        ctx.obj = fast_sync_progress_bar
+        ctx.obj = fast_sync_progress_bar.fast_sync_application()
     click.echo("---" * 30)

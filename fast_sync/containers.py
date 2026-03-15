@@ -18,11 +18,8 @@ from fast_sync.utils.progressbar import (
 )
 
 
-class Container(containers.DeclarativeContainer):
+class ReaderContainer(containers.DeclarativeContainer):
     reader_type = providers.Dependency(instance_of=str, default="simple_reader")
-    hash_type = providers.Dependency(instance_of=str, default="simple_hash")
-
-    # Readers
 
     filter_folder = providers.Factory(FilterFolders)
     filter_extensions = providers.Factory(FilterExtensionsFolder)
@@ -36,26 +33,31 @@ class Container(containers.DeclarativeContainer):
         ),
     )
 
-    readers = providers.Selector(
+    readers_selector = providers.Selector(
         selector=reader_type,
         simple_reader=folder_readers.simple_reader,
         filter_reader=folder_readers.filter_reader,
     )
 
-    # Cache
 
+class CacheContainer(containers.DeclarativeContainer):
     cache = providers.Factory(CacheFolderCreation)
 
-    # Hashes
+
+class HashContainer(containers.DeclarativeContainer):
+    hash_type = providers.Dependency(instance_of=str, default="simple_hash")
+
+    readers = providers.DependenciesContainer()
+    cache = providers.DependenciesContainer()
 
     hash_content_folder = providers.Factory(
         HashContentFolder,
-        reader=readers,
+        reader=readers.readers_selector,
     )
     hash_content_folder_caching = providers.Factory(
         HashContentFolderCaching,
-        reader=readers,
-        cache_path=cache,
+        reader=readers.readers_selector,
+        cache_path=cache.cache,
     )
 
     hash_content_folder_progressbar = providers.Factory(
@@ -65,7 +67,7 @@ class Container(containers.DeclarativeContainer):
         ProgressBarHashContentFolderCaching, **hash_content_folder_caching.kwargs
     )
 
-    hashers = providers.Selector(
+    hashers_selector = providers.Selector(
         selector=hash_type,
         simple_hash=hash_content_folder,
         cache_hash=hash_content_folder_caching,
@@ -73,48 +75,25 @@ class Container(containers.DeclarativeContainer):
         cache_hash_progressbar=hash_content_folder_caching_progressbar,
     )
 
-    # SyncManager
 
-    fast_sync = providers.Factory(FastSync, hash_method=hashers)
+class FastSyncContainer(containers.DeclarativeContainer):
+    hashers = providers.DependenciesContainer()
+
+    fast_sync_application = providers.Factory(
+        FastSync, hash_method=hashers.hashers_selector
+    )
 
 
-class Container2(containers.DeclarativeContainer):
+class Container(containers.DeclarativeContainer):
     reader_type = providers.Dependency(instance_of=str, default="simple_reader")
     hash_type = providers.Dependency(instance_of=str, default="simple_hash")
 
-    # Readers
+    reader = providers.Container(ReaderContainer, reader_type=reader_type)
 
-    folder_reader = providers.Factory(FolderReader)
+    cache = providers.Container(CacheContainer)
 
-    filter_folder = providers.Factory(FilterFolders)
-    filter_extensions = providers.Factory(FilterExtensionsFolder)
-    folder_filter_reader = providers.Factory(
-        FolderFilterReader,
-        filter_folder,
-        filter_extensions,
-    )
-    readers = providers.Selector(
-        selector=reader_type,
-        simple_reader=folder_reader,
-        filter_reader=folder_filter_reader,
+    hasher = providers.Container(
+        HashContainer, hash_type=hash_type, readers=reader, cache=cache
     )
 
-    # Hashes
-
-    hash_content_folder = providers.Factory(
-        HashContentFolder,
-        reader=readers,
-    )
-    hash_content_folder_caching = providers.Factory(
-        HashContentFolderCaching,
-        reader=readers,
-    )
-    hashers = providers.Selector(
-        selector=hash_type,
-        simple_hash=hash_content_folder,
-        cache_hash=hash_content_folder_caching,
-    )
-
-    # SyncManager
-
-    fast_sync = providers.Factory(FastSync, hash_method=hashers)
+    fast_sync = providers.Container(FastSyncContainer, hashers=hasher)
