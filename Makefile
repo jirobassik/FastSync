@@ -1,5 +1,5 @@
 compile:
-	uv run pyinstaller fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
+	uv run pyinstaller --hidden-import "dependency_injector.errors" --hidden-import "dependency_injector.wiring" fast_sync.py --distpath "compiled/dist" --workpath "compiled/build" --specpath "compiled" --onefile --name fs
 
 copy-bin:
 	cp compiled/dist/fs $(HOME)/.local/bin

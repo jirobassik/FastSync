@@ -4,7 +4,9 @@ from pathlib import Path
 
 from tqdm import tqdm
 
-from fast_sync import FastSync, FolderSync, HashContentFolder, HashContentFolderCaching
+from fast_sync.main import FastSync
+from fast_sync.hash_content_folder import HashContentFolder, HashContentFolderCaching
+from fast_sync.sync_manager import FolderSync
 from fast_sync.utils.types import ListHashPathKeyValue
 
 
@@ -20,7 +22,7 @@ class ProgressBarHashContentFolderMixin:
                 tqdm(
                     iterable=pool.imap_unordered(
                         hash_path_add_path_to_main_folder,
-                        self._reader.operation(path_to_main_folder),
+                        self._reader.read(path_to_main_folder),
                     ),
                     desc=f"Creating hash: {path_to_main_folder}",
                     leave=True,
