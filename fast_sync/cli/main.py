@@ -4,7 +4,7 @@ from loguru import logger
 
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.configures import hash_configure, reader_configure
-from fast_sync.containers import Container
+from fast_sync.containers import ProgressBarContainer
 from fast_sync.utils.errors import (
     CacheFolderCreationError,
     NotValidFilterInput,
@@ -34,13 +34,13 @@ def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
         grouped=group, sorted_=sort, extensions=extensions, folders=folders
     )
 
-    fast_sync_container = Container
+    fast_sync_container = ProgressBarContainer
     try:
-        reader = reader_configure(fast_sync_container, extensions, folders).value
+        reader_method = reader_configure(fast_sync_container, extensions, folders).value
         hash_method = hash_configure(hashing).value
 
         fast_sync_container_instance = fast_sync_container(
-            reader_type=reader, hash_type=hash_method
+            reader_type=reader_method, hash_type=hash_method
         )
         fast_sync_progress_bar = fast_sync_container_instance.fast_sync()
 

@@ -10,8 +10,8 @@ class Readers(Enum):
 
 
 class Hashes(Enum):
-    SIMPLE = "simple_hash_progressbar"
-    CACHE = "cache_hash_progressbar"
+    SIMPLE = "simple_hash"
+    CACHE = "cache_hash"
 
 
 def reader_configure(
