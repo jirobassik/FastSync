@@ -2,27 +2,13 @@ import click
 from click import Context, FileError
 from loguru import logger
 
-from fast_sync import (
-    CacheFolderCreation,
-    FolderReader,
-)
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
-from fast_sync.folder_reader.folder_filter_reader import (
-    FilterExtensionsFolder,
-    FilterFolders,
-)
-from fast_sync.folder_reader.folder_filter_reader.folder_filter_reader import (
-    FolderFilterReader,
-)
+from fast_sync.configures import hash_configure, reader_configure
+from fast_sync.containers import ProgressBarContainer
 from fast_sync.utils.errors import (
     CacheFolderCreationError,
     NotValidFilterInput,
     OsPathResolverError,
-)
-from fast_sync.utils.progressbar import (
-    ProgressBarFastSync,
-    ProgressBarHashContentFolder,
-    ProgressBarHashContentFolderCaching,
 )
 
 from .utils import CustomHelp, error_output
@@ -48,20 +34,16 @@ def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
         grouped=group, sorted_=sort, extensions=extensions, folders=folders
     )
 
+    fast_sync_container = ProgressBarContainer
     try:
-        reader = FolderReader()
-        if extensions or folders:
-            reader = FolderFilterReader(
-                FilterFolders(*folders),
-                FilterExtensionsFolder(*extensions),
-            )
+        reader_method = reader_configure(fast_sync_container, extensions, folders).value
+        hash_method = hash_configure(hashing).value
 
-        hash_method = ProgressBarHashContentFolder(reader)
-        if hashing:
-            cache_path = CacheFolderCreation()
-            hash_method = ProgressBarHashContentFolderCaching(reader, cache_path)
+        fast_sync_container_instance = fast_sync_container(
+            reader_type=reader_method, hash_type=hash_method
+        )
+        fast_sync_progress_bar = fast_sync_container_instance.fast_sync()
 
-        progress_bar_sync_manager = ProgressBarFastSync(hash_method)
     except NotValidFilterInput:
         logger.debug("Not valid filter input")
         error_output(
@@ -69,10 +51,10 @@ def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
         )
     except CacheFolderCreationError as e:
         raise PermissionDeniedError(
-            e.filename, hint="Try another folder with write and reade permissions"
+            e.filename, hint="Try another folder with write and read permissions"
         )
     except OsPathResolverError as e:
         raise FileError(e.filename, hint="Try another path")
     else:
-        ctx.obj = progress_bar_sync_manager
+        ctx.obj = fast_sync_progress_bar.fast_sync_application()
     click.echo("---" * 30)

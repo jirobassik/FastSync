@@ -53,7 +53,7 @@ class HashContentFolder:
             )
             iter_hashes = pool.map(
                 hash_path_add_path_to_main_folder,
-                self._reader.operation(path_to_main_folder),
+                self._reader.read(path_to_main_folder),
             )
         return iter_hashes
 

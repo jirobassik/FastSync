@@ -1,12 +1,12 @@
 from pathlib import Path
 
+from .base import Reader
 from .folder_filter_reader import FolderRecursiveReaderComponent
 
 
-class FolderReader:
+class FolderReader(Reader):
     def __repr__(self):
         return self.__class__.__name__
 
-    @staticmethod
-    def operation(folder: Path):
+    def read(self, folder: Path):
         return FolderRecursiveReaderComponent(folder).operation()
