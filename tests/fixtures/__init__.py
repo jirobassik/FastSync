@@ -1,5 +1,6 @@
 from tests.fixtures.fixtures import (
     cache_folder_creation,
+    folder_structure_hash,
     path_setup,
 )
 from tests.fixtures.fixtures_folder_content import (
@@ -21,6 +22,7 @@ from tests.fixtures.fixtures_folder_filled import (
 )
 
 __all__ = [
+    "folder_structure_hash",
     "cache_folder_creation",
     "path_setup",
     "create_base_folder",

@@ -4,7 +4,7 @@ from loguru import logger
 
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.configures import hash_configure, reader_configure
-from fast_sync.containers import ProgressBarContainer
+from fast_sync.containers.progressbar_container import ProgressBarContainer
 from fast_sync.utils.errors import (
     CacheFolderCreationError,
     NotValidFilterInput,
@@ -43,7 +43,11 @@ def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
             reader_type=reader_method, hash_type=hash_method
         )
         fast_sync_progress_bar = fast_sync_container_instance.fast_sync()
+        equal_resolver_progress_bar = fast_sync_container_instance.equal_resolver()
 
+        ctx.meta["equal_resolver"] = (
+            equal_resolver_progress_bar.equal_resolver_application()
+        )
     except NotValidFilterInput:
         logger.debug("Not valid filter input")
         error_output(

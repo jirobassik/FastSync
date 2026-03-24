@@ -8,7 +8,7 @@ from fast_sync import (
     HashContentFolder,
     HashContentFolderCaching,
 )
-from fast_sync.containers import Container
+from fast_sync.containers.main_container import Container
 from fast_sync.folder_reader.folder_filter_reader import (
     FilterExtensionsFolder,
     FilterFolders,

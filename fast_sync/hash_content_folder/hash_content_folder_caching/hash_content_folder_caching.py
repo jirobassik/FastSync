@@ -5,10 +5,11 @@ from diskcache import Cache
 from fast_sync import FolderFilterReader, FolderReader
 from fast_sync.hash_content_folder import HashContentFolder
 
+from ..hash_content_folder import HashContentBase
 from .cache_folder_creation import CacheFolderCreation
 
 
-class HashContentFolderCaching(HashContentFolder):
+class HashContentCachingBase(HashContentBase):
     def __init__(
         self,
         reader: FolderReader | FolderFilterReader = FolderReader(),
@@ -30,3 +31,7 @@ class HashContentFolderCaching(HashContentFolder):
             return key, path_to_file
         else:
             return self._cache.get(filename_without_parent_as_posix), path_to_file
+
+
+class HashContentFolderCaching(HashContentFolder, HashContentCachingBase):
+    pass

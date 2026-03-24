@@ -25,27 +25,14 @@ class HashValue:
             )
 
 
-class HashContentFolder:
-    left_hash = HashValue()
-    right_hash = HashValue()
-
+class HashContentBase:
     def __init__(self, reader: FolderReader | FolderFilterReader = FolderReader()):
         self._reader = reader
 
     def __repr__(self):
-        return (
-            f"{self.__class__.__name__}"
-            f"(left_hash={hash_repr.repr_lazy_attr(self, 'left_hash')}, "
-            f"right_hash={hash_repr.repr_lazy_attr(self, 'right_hash')}, "
-            f"reader={self._reader})"
-        )
+        return f"{self.__class__.__name__}reader={self._reader})"
 
-    def calculate_hash(self, left_path: Path, right_path: Path) -> Self:
-        self.left_hash = self._create_hash(left_path)
-        self.right_hash = self._create_hash(right_path)
-        return self
-
-    def _create_hash(self, path_to_main_folder: Path) -> ListHashPathKeyValue:
+    def create_hash(self, path_to_main_folder: Path) -> ListHashPathKeyValue:
         with multiprocessing.Pool() as pool:
             hash_path_add_path_to_main_folder = partial(
                 self._hash_path,
@@ -73,3 +60,21 @@ class HashContentFolder:
         else:
             value = path_to_file
             return key, value
+
+
+class HashContentFolder(HashContentBase):
+    left_hash = HashValue()
+    right_hash = HashValue()
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}"
+            f"(left_hash={hash_repr.repr_lazy_attr(self, 'left_hash')}, "
+            f"right_hash={hash_repr.repr_lazy_attr(self, 'right_hash')}, "
+            f"reader={self._reader})"
+        )
+
+    def calculate_hash(self, left_path: Path, right_path: Path) -> Self:
+        self.left_hash = self.create_hash(left_path)
+        self.right_hash = self.create_hash(right_path)
+        return self
