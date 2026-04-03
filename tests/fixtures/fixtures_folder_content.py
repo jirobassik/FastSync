@@ -45,3 +45,18 @@ def right_folder_nested_simple_structure():
             },
         }
     }
+
+
+@pytest.fixture(scope="session")
+def folders_with_equal_files_not_same_name():
+    return {
+        "folder1": {
+            "config.yaml": "settings:\n  enabled: true",
+            "file56.txt": "another content",
+            "users.csv": "id,name,age\n1,Alice,30\n2,Bob,25",
+        },
+        "folder2": {
+            "config.yaml2": "settings:\n  enabled: true",
+            "file56.txt": "another content",
+        },
+    }

@@ -1,6 +1,6 @@
 from dependency_injector import containers, providers
 
-from fast_sync.equal_resolver import EqualResolver
+from fast_sync.duplicate_resolver.duplicate_resolver import EqualResolver
 
 
 class EqualResolverContainer(containers.DeclarativeContainer):
