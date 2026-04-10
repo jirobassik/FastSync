@@ -4,27 +4,36 @@ from typing import ValuesView
 import inquirer
 from inquirer.themes import GreenPassion, Theme
 
+from fast_sync.duplicate_resolver.duplicate_filtering import FilterDuplicateBase
 from fast_sync.duplicate_resolver.duplicate_questions.questions import (
-    EqualByYearQuestion,
-    EqualGroupByHashQuestion,
+    FilterDuplicateByCheckboxQuestion,
+    FilterDuplicateByDateCreationTimeQuestion,
 )
 
 
-class EqualMethodQuestion:
+class FilterDuplicateQuestion(FilterDuplicateBase):
     def __init__(self, theme: Theme = GreenPassion()):
         self.theme = theme
 
     def __repr__(self):
         return f"{self.__class__.__name__}theme={self.theme})"
 
-    def start_questions(self, duplicates: ValuesView[list[Path]]):
+    def filter_duplicate(self, duplicates: ValuesView[list[Path]]):
         choose_method_question = [
             inquirer.List(
                 "choose_method",
                 message="Choose method for resolve duplicated files",
                 choices=[
-                    ("Grouped", EqualGroupByHashQuestion(duplicates, self.theme)),
-                    ("Year", EqualByYearQuestion(duplicates, self.theme)),
+                    (
+                        "Choose",
+                        FilterDuplicateByCheckboxQuestion(duplicates, self.theme),
+                    ),
+                    (
+                        "Creation time",
+                        FilterDuplicateByDateCreationTimeQuestion(
+                            duplicates, self.theme
+                        ),
+                    ),
                 ],
             ),
         ]

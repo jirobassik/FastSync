@@ -1,7 +1,7 @@
 from dependency_injector import containers, providers
 
 from fast_sync import FastSync
-from fast_sync.containers.equal_resolver_container import EqualResolverContainer
+from fast_sync.containers.duplicate_resolver_container import DuplicateResolverContainer
 from fast_sync.containers.hash_container import CacheContainer, HashContainer
 from fast_sync.containers.reader_container import ReaderContainer
 
@@ -34,4 +34,4 @@ class Container(containers.DeclarativeContainer):
 
     # noinspection PyTypeChecker
     fast_sync = providers.Container(fast_sync_base, hashers=hasher)
-    equal_resolver = providers.Container(EqualResolverContainer, hashers=hasher)
+    duplicate_resolver = providers.Container(DuplicateResolverContainer, hashers=hasher)

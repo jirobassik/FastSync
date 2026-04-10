@@ -7,6 +7,7 @@ from fast_sync.cli.utils.custom_group.examples import examples, examples_cli
 from fast_sync.cli.utils.error.errors import PermissionDeniedError
 from fast_sync.utils.errors import (
     CacheFolderCreationError,
+    EqualResolverError,
     HashContentFolderError,
     OsPathResolverError,
 )
@@ -58,6 +59,8 @@ class CustomGroup(click.Group):
             error = PermissionDeniedError(
                 e.error_class.filename, hint="Permission denied"
             )
+        except EqualResolverError as e:
+            click.secho(e, fg="green", bold=True)
 
         if error is not None:
             self.show_error(error)

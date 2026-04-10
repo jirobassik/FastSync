@@ -7,7 +7,7 @@ from loguru import logger
 from fast_sync.utils.types import ListHashPathKeyValue
 
 
-class EqualFinder:
+class DuplicateFinder:
     __slots__ = ["_path_attr"]
 
     def __init__(self, only_name=False):
@@ -16,9 +16,10 @@ class EqualFinder:
     def __repr__(self):
         return f"{self.__class__.__name__}(path_attr={self._path_attr}"
 
-    def find_equal(self, folder_hash_structure: ListHashPathKeyValue) -> list[Path]:
+    def find_duplicate(self, folder_hash_structure: ListHashPathKeyValue) -> list[Path]:
         equal_files_paths = []
         dublicates_hashes = self._find_dublicates_hashes(folder_hash_structure)
+
         for hash_path_path in folder_hash_structure:
             if hash_path_path[0][0] in dublicates_hashes:
                 equal_files_paths.append(self._path_attr(hash_path_path[1]))
@@ -31,6 +32,7 @@ class EqualFinder:
     ) -> set[str]:
         dublicates = set()
         seen = set()
+
         for hash_path_path in folder_hash_structure:
             file_hash = hash_path_path[0][0]
             if file_hash in seen:
@@ -51,12 +53,13 @@ class EqualFinder:
         return _path_setupper
 
 
-class EqualFinderGroupByHash(EqualFinder):
-    def find_equal(
+class DuplicateFinderGroupByHash(DuplicateFinder):
+    def find_duplicate(
         self, folder_hash_structure: ListHashPathKeyValue
     ) -> ValuesView[list[Path]]:
         grouped_by_hash = defaultdict(list)
         dublicates_hashes = self._find_dublicates_hashes(folder_hash_structure)
+
         for hash_path_path in folder_hash_structure:
             if hash_path_path[0][0] in dublicates_hashes:
                 grouped_by_hash[hash_path_path[0][0]].append(

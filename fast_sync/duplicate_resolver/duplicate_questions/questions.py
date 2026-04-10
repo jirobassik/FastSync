@@ -7,7 +7,7 @@ from inquirer.questions import Question
 from inquirer.themes import Theme
 
 from fast_sync.duplicate_resolver.duplicate_filtering import (
-    FilterDublicateByDateCreationTime,
+    FilterDuplicateByDateCreationTime,
 )
 from fast_sync.duplicate_resolver.duplicate_questions.base import (
     BaseQuestion,
@@ -40,7 +40,7 @@ class EqualGroupQuestion(BaseQuestion):
         raise NotImplementedError
 
 
-class EqualGroupByHashQuestion(EqualGroupQuestion):
+class FilterDuplicateByCheckboxQuestion(EqualGroupQuestion):
     def __repr__(self):
         return f"{self.__class__.__name__}"
 
@@ -57,7 +57,7 @@ class EqualGroupByHashQuestion(EqualGroupQuestion):
         return questions
 
 
-class EqualByYearQuestion(BaseQuestion):
+class FilterDuplicateByDateCreationTimeQuestion(BaseQuestion):
     def __init__(self, duplicates: ValuesView[list[Path]], theme: Theme):
         super().__init__(duplicates, theme)
 
@@ -71,7 +71,7 @@ class EqualByYearQuestion(BaseQuestion):
         answers = inquirer.prompt(
             self.question(), raise_keyboard_interrupt=True, theme=self.theme
         )
-        return FilterDublicateByDateCreationTime(
+        return FilterDuplicateByDateCreationTime(
             filter_by=answers.get("choose_filter_date")
         ).filter_duplicate(self.duplicates)
 
@@ -79,7 +79,7 @@ class EqualByYearQuestion(BaseQuestion):
         choose_filter_method = [
             inquirer.List(
                 "choose_filter_date",
-                message="Delete dublicates files:",
+                message="Delete dublicates files",
                 choices=[
                     ("Newest", "newest"),
                     ("Oldest", "oldest"),

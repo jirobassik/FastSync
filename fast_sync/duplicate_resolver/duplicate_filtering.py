@@ -1,18 +1,31 @@
+import abc
 import operator
 from functools import reduce
 from pathlib import Path
-from typing import Generator, ValuesView
+from typing import Generator, Iterable, ValuesView
 
 from loguru import logger
 
 from fast_sync.utils.errors import FilterDublicateByDateCreationTimeError
 
 
-class FilterDublicateByDateCreationTime:
+class FilterDuplicateBase(abc.ABC):
+    @abc.abstractmethod
+    def filter_duplicate(self, dublicates: ValuesView[list[Path]]) -> Iterable[Path]:
+        pass
+
+
+class FilterDuplicateByDateCreationTime(FilterDuplicateBase):
     __slots__ = ["_date_filtering_method"]
 
     def __init__(self, filter_by="newest"):
         self._date_filtering_method = self._creation_date_compare_method(filter_by)
+
+    def __repr__(self):
+        return (
+            f"{self.__class__.__name__}("
+            f"date_filtering_method={self._date_filtering_method})"
+        )
 
     @staticmethod
     def _creation_date_compare_method(filter_by: str):

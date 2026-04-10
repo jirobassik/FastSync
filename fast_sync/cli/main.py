@@ -6,7 +6,7 @@ from click import Context
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.configures import hash_configure, reader_configure
 from fast_sync.containers.progressbar_container import ProgressBarContainer
-from fast_sync.duplicate_resolver.duplicate_resolver import EqualResolver
+from fast_sync.duplicate_resolver.duplicate_resolver import DuplicateResolver
 from fast_sync.main import FastSync
 
 from .utils import CustomGroup
@@ -15,7 +15,8 @@ from .utils.custom_config_option import config_option
 
 class CliApplicationsObj(NamedTuple):
     fast_sync: FastSync
-    equal_resolver: EqualResolver
+    duplicate_resolver: DuplicateResolver
+
 
 @click.group(cls=CustomGroup)
 @click.option("--hashing/--no-hashing", "-h/-Nh", default=False, help="Use hash for boost repeat calculations [Warning if the files "
@@ -46,14 +47,15 @@ def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
         reader_type=reader_method, hash_type=hash_method
     )
     fast_sync_progress_bar = fast_sync_container_instance.fast_sync()
-    equal_resolver_progress_bar = fast_sync_container_instance.equal_resolver()
+    duplicate_resolver_progress_bar = fast_sync_container_instance.duplicate_resolver()
 
     fast_sync_application = fast_sync_progress_bar.fast_sync_application()
-    equal_resolver_application = (
-        equal_resolver_progress_bar.equal_resolver_application()
+    duplicate_resolver_application = (
+        duplicate_resolver_progress_bar.duplicate_resolver_application()
     )
 
     ctx.obj = CliApplicationsObj(
-        fast_sync=fast_sync_application, equal_resolver=equal_resolver_application
+        fast_sync=fast_sync_application,
+        duplicate_resolver=duplicate_resolver_application,
     )
     click.echo("---" * 30)
