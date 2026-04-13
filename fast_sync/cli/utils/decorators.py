@@ -11,7 +11,7 @@ def path_setup_wrapper(func):
         "-l",
         required=True,
         envvar="LEFT_FOLDER",
-        type=click.Path(exists=True, file_okay=False),
+        type=click.Path(exists=True, file_okay=False, writable=True),
     )
     @click.option(
         "--right-folder",
@@ -19,7 +19,7 @@ def path_setup_wrapper(func):
         "-r",
         required=True,
         envvar="RIGHT_FOLDER",
-        type=click.Path(exists=True, file_okay=False),
+        type=click.Path(exists=True, file_okay=False, writable=True),
     )
     def path_wrapper(*args, **kwargs):
         func(*args, **kwargs)

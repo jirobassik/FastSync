@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import click
 import click_extra
 
@@ -9,10 +11,10 @@ from fast_sync.cli.main import CliApplicationsObj, fast_sync_cli
     "--folder",
     "-f",
     required=True,
-    type=click.Path(exists=True, file_okay=False),
+    type=click.Path(exists=True, file_okay=False, writable=True),
 )
 @click.pass_obj
-def duplicates(obj: CliApplicationsObj, folder):
+def duplicates(obj: CliApplicationsObj, folder: Path):
     obj.duplicate_resolver.path_setup(folder)
 
 
