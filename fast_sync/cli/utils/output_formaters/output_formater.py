@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 import click
 
@@ -12,12 +13,24 @@ from fast_sync.cli.utils.output_formaters.formaters import (
 
 
 class OutputFormater:
-    def __init__(self, sorted_=False, grouped=False, **kwargs):
+    def __init__(
+        self,
+        sorted_: bool = False,
+        grouped: bool = False,
+        caching: bool = False,
+        num_processes: Optional[int] = None,
+        **kwargs,
+    ):
+
         self.sorted_ = sorted_
         self.grouped = grouped
+
+        self.num_processes = num_processes
+        self.caching = caching
+
         self.filters = kwargs
 
-        self._filters_output()
+        self._view_user_options()
 
     def __call__(
         self,
@@ -62,6 +75,18 @@ class OutputFormater:
         if reference_folder is None:
             raise OutputFormaterError("Reference folder not provided")
         grouped_output(missing_files, reference_folder)
+
+    def _view_user_options(self):
+        if self.num_processes is not None:
+            click.secho(
+                f"\nNum processes: {white_bolt_text(self.num_processes)}", fg="green"
+            )
+
+        click.secho(
+            f"Caching is used: {white_bolt_text('Yes') if self.caching else white_bolt_text('No')}",
+            fg="green",
+        )
+        self._filters_output()
 
     def _filters_output(self):
         if any(self.filters.values()):

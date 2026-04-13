@@ -46,7 +46,7 @@ class CustomGroup(click.Group):
             super().__call__(*args, **kwargs)
         except PermissionError as e:
             error = PermissionDeniedError(e.filename, hint="Permission denied")
-        except FileNotFoundError as e:
+        except (FileNotFoundError, ValueError, TypeError) as e:
             error = click.exceptions.ClickException(e.__str__())
 
         except CacheFolderCreationError as e:

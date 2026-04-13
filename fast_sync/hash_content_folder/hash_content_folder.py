@@ -9,6 +9,7 @@ from loguru import logger
 from fast_sync import FolderFilterReader, FolderReader
 from fast_sync.utils.custom_repr import hash_repr
 from fast_sync.utils.errors import HashContentFolderError
+from fast_sync.utils.num_process import NumProcess
 from fast_sync.utils.types import HashPathKeyValue, ListHashPathKeyValue
 
 
@@ -26,14 +27,21 @@ class HashValue:
 
 
 class HashContentBase:
-    def __init__(self, reader: FolderReader | FolderFilterReader = FolderReader()):
+    num_processes = NumProcess()
+
+    def __init__(
+        self,
+        reader: FolderReader | FolderFilterReader = FolderReader(),
+        num_processes: int = 2,
+    ):
         self._reader = reader
+        self.num_processes = num_processes
 
     def __repr__(self):
         return f"{self.__class__.__name__}reader={self._reader})"
 
     def create_hash(self, path_to_main_folder: Path) -> ListHashPathKeyValue:
-        with multiprocessing.Pool() as pool:
+        with multiprocessing.Pool(self.num_processes) as pool:
             hash_path_add_path_to_main_folder = partial(
                 self._hash_path,
                 path_to_main_folder=path_to_main_folder,
