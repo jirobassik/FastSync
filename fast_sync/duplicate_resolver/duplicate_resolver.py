@@ -1,5 +1,6 @@
+from functools import cached_property
 from pathlib import Path
-from typing import ValuesView
+from typing import ValuesView, Iterable
 
 from loguru import logger
 from send2trash import send2trash
@@ -57,12 +58,15 @@ class DuplicateResolver(DuplicatesFileValidation):
         self.validate(duplicates)
         return duplicates
 
+    @cached_property
+    def get_filters_duplicates(self) -> Iterable[Path]:
+        duplicates_files = self.get_duplicate_elements()
+
+        filters_duplicates = self._filter_duplicates.filter_duplicate(duplicates_files)
+        return filters_duplicates
+
     def resolve(self):
-        equal_el = self.get_duplicate_elements()
-
-        filters_duplicates = self._filter_duplicates.filter_duplicate(equal_el)
-
-        for file_to_delete in filters_duplicates:
+        for file_to_delete in self.get_filters_duplicates:
             self._delete_file(file_to_delete)
 
     @staticmethod

@@ -25,7 +25,7 @@ class FilterDuplicateQuestion(FilterDuplicateBase):
                 message="Choose method for resolve duplicated files",
                 choices=[
                     (
-                        "Choose",
+                        "Choose in checkbox",
                         FilterDuplicateByCheckboxQuestion(duplicates, self.theme),
                     ),
                     (
