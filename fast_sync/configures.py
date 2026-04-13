@@ -24,8 +24,15 @@ def reader_configure(
     return Readers.SIMPLE
 
 
-def hash_configure(hashing: bool):
-    if hashing:
+def hash_configure(
+    fast_sync_container: Type[Container], caching: bool, num_processes: int
+):
+    if caching:
+        fast_sync_container.hasher.hash_content_folder_caching.add_kwargs(
+            num_processes=num_processes
+        )
         return Hashes.CACHE
-
+    fast_sync_container.hasher.hash_content_folder.add_kwargs(
+        num_processes=num_processes
+    )
     return Hashes.SIMPLE

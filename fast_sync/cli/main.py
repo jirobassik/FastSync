@@ -8,6 +8,7 @@ from fast_sync.configures import hash_configure, reader_configure
 from fast_sync.containers.progressbar_container import ProgressBarContainer
 from fast_sync.duplicate_resolver.duplicate_resolver import DuplicateResolver
 from fast_sync.main import FastSync
+from fast_sync.utils.num_process import number_of_usable_cpus
 
 from .utils import CustomGroup
 from .utils.custom_config_option import config_option
@@ -19,21 +20,30 @@ class CliApplicationsObj(NamedTuple):
 
 
 @click.group(cls=CustomGroup)
-@click.option("--hashing/--no-hashing", "-h/-Nh", default=False, help="Use hash for boost repeat calculations [Warning if the files "
+@click.option("--caching/--no-caching", "-ch/-Nch", default=False, help="Use cache for boost repeat calculations [Warning if the files "
                                                  "have the same name and different contents, "
                                                  "caching should not be used in this case]")
 @click.option("--group/--no-group", "-g/-Ng", default=False, help="Group files by folders [Affects the output format]")
 @click.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name [Affects the output format]")
+@click.option("--num-processes", "-np", default=2, type=click.IntRange(1, number_of_usable_cpus()), help="Number of dedicated processes for file processing. Change only at your own risk.")
 @click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
 @config_option(strict=True, roaming=False)
 @click.pass_context
-def fast_sync_cli(ctx: Context, hashing: bool, group: bool, sort: bool, extensions: tuple[str, ...], folders: tuple):
+def fast_sync_cli(
+    ctx: Context,
+    caching: bool,
+    group: bool,
+    sort: bool,
+    num_processes: int,
+    extensions: tuple[str, ...],
+    folders: tuple,
+):
     click.echo("---" * 30)
     click.secho("Fast sync started", fg="green", bold=True)
 
     ctx.meta["output_formater"] = OutputFormater(
-        grouped=group, sorted_=sort, extensions=extensions, folders=folders
+        grouped=group, sorted_=sort, num_processes=num_processes, caching=caching, extensions=extensions, folders=folders
     )
 
     # Define main container
@@ -41,11 +51,12 @@ def fast_sync_cli(ctx: Context, hashing: bool, group: bool, sort: bool, extensio
 
     # Get reader and hash method from user options values
     reader_method = reader_configure(fast_sync_container, extensions, folders).value
-    hash_method = hash_configure(hashing).value
+    hash_method = hash_configure(fast_sync_container, caching, num_processes).value
 
     fast_sync_container_instance = fast_sync_container(
         reader_type=reader_method, hash_type=hash_method
     )
+
     fast_sync_progress_bar = fast_sync_container_instance.fast_sync()
     duplicate_resolver_progress_bar = fast_sync_container_instance.duplicate_resolver()
 

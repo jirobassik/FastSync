@@ -1,4 +1,5 @@
 import multiprocessing
+
 from functools import partial
 from pathlib import Path
 
@@ -14,7 +15,7 @@ class ProgressBarHashContentFolderMixin:
     def create_hash(
         self: HashContentFolder, path_to_main_folder: Path
     ) -> ListHashPathKeyValue:
-        with multiprocessing.Pool() as pool:
+        with multiprocessing.Pool(self.num_processes) as pool:
             hash_path_add_path_to_main_folder = partial(
                 self._hash_path, path_to_main_folder=path_to_main_folder
             )

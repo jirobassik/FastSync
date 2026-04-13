@@ -14,8 +14,9 @@ class HashContentCachingBase(HashContentBase):
         self,
         reader: FolderReader | FolderFilterReader = FolderReader(),
         cache_path: CacheFolderCreation = CacheFolderCreation(),
+        num_processes: int = 2,
     ):
-        super().__init__(reader)
+        super().__init__(reader, num_processes)
         self._cache = Cache(cache_path.path_to_cache.as_posix())
 
     def __repr__(self):
