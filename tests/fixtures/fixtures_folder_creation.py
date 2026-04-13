@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 
 
@@ -11,7 +13,7 @@ def create_base_folder(tmp_path_factory):
 
 @pytest.fixture(scope="session")
 def fill_folder_content():
-    def _fill_folder_content(path_, folders):
+    def _fill_folder_content(path_: Path, folders):
         for key, value in folders.items():
             if isinstance(value, dict):
                 new_path = path_ / key

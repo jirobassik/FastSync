@@ -1,8 +1,10 @@
 from tests.fixtures.fixtures import (
     cache_folder_creation,
+    folder_structure_hash,
     path_setup,
 )
 from tests.fixtures.fixtures_folder_content import (
+    folders_with_equal_files_not_same_name,
     left_folder_nested_simple_structure,
     left_folder_simple_structure,
     right_folder_nested_simple_structure,
@@ -14,6 +16,7 @@ from tests.fixtures.fixtures_folder_creation import (
     filled_folder_factory,
 )
 from tests.fixtures.fixtures_folder_filled import (
+    folder_equal_data,
     left_folder_nested_simple,
     left_folder_simple,
     right_folder_nested_simple,
@@ -21,6 +24,7 @@ from tests.fixtures.fixtures_folder_filled import (
 )
 
 __all__ = [
+    "folder_structure_hash",
     "cache_folder_creation",
     "path_setup",
     "create_base_folder",
@@ -34,4 +38,6 @@ __all__ = [
     "left_folder_nested_simple_structure",
     "left_folder_simple",
     "right_folder_simple",
+    "folders_with_equal_files_not_same_name",
+    "folder_equal_data",
 ]

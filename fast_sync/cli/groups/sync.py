@@ -1,22 +1,22 @@
 from itertools import chain
+from typing import Optional
 
 import click
 import click_extra
 
-from fast_sync.cli.main import fast_sync_cli
+from fast_sync import FastSync
+from fast_sync.cli.main import CliApplicationsObj, fast_sync_cli
 from fast_sync.cli.utils.decorators import path_setup_wrapper
-from fast_sync.cli.utils.error.error_handling import error_handling
 from fast_sync.cli.utils.output_formaters.formaters import white_bolt_text
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
-from fast_sync.main import FastSync
 
 
 @fast_sync_cli.group(help="Sync chosen folder")
 @path_setup_wrapper
 @click.pass_obj
-def sync(obj: FastSync, left_folder, right_folder):
-    obj.path_setup(left_folder, right_folder)
-    error_handling(obj.prepare_sync)
+def sync(obj: CliApplicationsObj, left_folder, right_folder):
+    obj.fast_sync.path_setup(left_folder, right_folder)
+    obj.fast_sync.prepare_sync()
 
 
 class SyncFabric:
@@ -35,7 +35,7 @@ class SyncFabric:
         }
         self._all_operations = self._required_operations | self._optional_operations
 
-        self._obj = None
+        self._obj: Optional[FastSync] = None
         self._output_formater = None
 
     def create(self):
@@ -62,13 +62,13 @@ class SyncFabric:
         @click.decorators.pass_meta_key("output_formater")
         @click.pass_obj
         def sync_dec(
-            obj: FastSync,
+            obj: CliApplicationsObj,
             output_formater: OutputFormater,
             view_missing: bool,
             check_sync: str,
             open_sync_folder: str,
         ):
-            self._obj = obj
+            self._obj = obj.fast_sync
             self._output_formater = output_formater
 
             if view_missing:

@@ -29,6 +29,14 @@ class OsPathResolverError(Exception):
         return f"Path not found: {self.filename}"
 
 
+class EqualResolverError(Exception):
+    pass
+
+
+class FilterDublicateByDateCreationTimeError(Exception):
+    pass
+
+
 class PathSetupError(ValueError):
     pass
 

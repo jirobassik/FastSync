@@ -11,7 +11,7 @@ from fast_sync.utils.types import ListHashPathKeyValue
 
 
 class ProgressBarHashContentFolderMixin:
-    def _create_hash(
+    def create_hash(
         self: HashContentFolder, path_to_main_folder: Path
     ) -> ListHashPathKeyValue:
         with multiprocessing.Pool() as pool:

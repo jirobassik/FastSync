@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest
+from dependency_injector import providers
 
 from fast_sync import (
     CacheFolderCreation,
@@ -8,11 +9,16 @@ from fast_sync import (
     HashContentFolder,
     HashContentFolderCaching,
 )
-from fast_sync.containers import Container
+from fast_sync.containers.main_container import Container
+from fast_sync.duplicate_resolver.duplicate_filtering import (
+    FilterDuplicateByDateCreationTime,
+)
+from fast_sync.duplicate_resolver.duplicate_finder import DuplicateFinderGroupByHash
 from fast_sync.folder_reader.folder_filter_reader import (
     FilterExtensionsFolder,
     FilterFolders,
 )
+from fast_sync.hash_content_folder.hash_content_folder import HashContentBase
 from fast_sync.main import FastSync
 from tests.fixtures import *  # noqa: F403
 
@@ -226,3 +232,47 @@ def internal_folders_simple():
         )
 
     return _internal_folders_simple
+
+
+@pytest.fixture(scope="session")
+def configure_dublicate_finder_by_date(folder_equal_data):
+    path_to_folder_with_equal_data = Path(folder_equal_data)
+
+    def _configure_dublicate_finder_by_date(filter_by):
+        hash_content = HashContentBase()
+        equal_finder = DuplicateFinderGroupByHash()
+
+        duplicates_files = equal_finder.find_duplicate(
+            hash_content.create_hash(path_to_folder_with_equal_data)
+        )
+        filter_by_date = FilterDuplicateByDateCreationTime(
+            filter_by=filter_by
+        ).filter_duplicate(duplicates_files)
+
+        convert_for_compare = list(
+            map(
+                lambda x: x.relative_to(path_to_folder_with_equal_data).as_posix(),
+                filter_by_date,
+            )
+        )
+        return convert_for_compare
+
+    return _configure_dublicate_finder_by_date
+
+
+@pytest.fixture(scope="session")
+def configure_duplicate_resolver_container(folder_equal_data):
+    fast_sync_container = Container
+
+    fast_sync_container_instance = fast_sync_container(
+        reader_type="simple_reader", hash_type="simple_hash"
+    )
+    duplicate_resolver = fast_sync_container_instance.duplicate_resolver()
+
+    duplicate_resolver.duplicate_resolver_application.add_kwargs(
+        filter_duplicates=providers.Factory(FilterDuplicateByDateCreationTime)
+    )
+
+    equal_resolver_application = duplicate_resolver.duplicate_resolver_application()
+    equal_resolver_application.path_setup(folder_equal_data)
+    return equal_resolver_application

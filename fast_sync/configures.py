@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Type
 
-from fast_sync.containers import Container
+from fast_sync.containers.main_container import Container
 
 
 class Readers(Enum):
