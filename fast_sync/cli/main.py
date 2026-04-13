@@ -28,7 +28,7 @@ class CliApplicationsObj(NamedTuple):
 @click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
 @config_option(strict=True, roaming=False)
 @click.pass_context
-def fast_sync_cli(ctx: Context, hashing, group, sort, extensions, folders):
+def fast_sync_cli(ctx: Context, hashing: bool, group: bool, sort: bool, extensions: tuple[str, ...], folders: tuple):
     click.echo("---" * 30)
     click.secho("Fast sync started", fg="green", bold=True)
 

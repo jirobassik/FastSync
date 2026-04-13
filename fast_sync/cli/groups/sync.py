@@ -1,4 +1,5 @@
 from itertools import chain
+from pathlib import Path
 from typing import Optional
 
 import click
@@ -14,7 +15,7 @@ from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 @fast_sync_cli.group(help="Sync chosen folder")
 @path_setup_wrapper
 @click.pass_obj
-def sync(obj: CliApplicationsObj, left_folder, right_folder):
+def sync(obj: CliApplicationsObj, left_folder: Path, right_folder: Path):
     obj.fast_sync.path_setup(left_folder, right_folder)
     obj.fast_sync.prepare_sync()
 

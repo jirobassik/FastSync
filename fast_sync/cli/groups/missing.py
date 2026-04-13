@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import click
 
 from fast_sync.cli.main import CliApplicationsObj, fast_sync_cli
@@ -8,7 +10,7 @@ from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 @fast_sync_cli.group(help="View missing files in chosen folder")
 @path_setup_wrapper
 @click.pass_obj
-def missing(obj: CliApplicationsObj, left_folder, right_folder):
+def missing(obj: CliApplicationsObj, left_folder: Path, right_folder: Path):
     obj.fast_sync.path_setup(left_folder, right_folder)
     obj.fast_sync.analyze()
 
