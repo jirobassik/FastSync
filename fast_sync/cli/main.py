@@ -1,7 +1,7 @@
 from typing import NamedTuple
-
 import click
-from click import Context
+import click_extra
+from click_extra import ExtraContext
 
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.configures import hash_configure, reader_configure
@@ -12,6 +12,7 @@ from fast_sync.utils.num_process import number_of_usable_cpus
 
 from .utils import CustomGroup
 from .utils.custom_config_option import config_option
+from .utils.custom_group.examples import command_examples_fast_sync_cli
 
 
 class CliApplicationsObj(NamedTuple):
@@ -19,19 +20,21 @@ class CliApplicationsObj(NamedTuple):
     duplicate_resolver: DuplicateResolver
 
 
-@click.group(cls=CustomGroup)
-@click.option("--caching/--no-caching", "-ch/-Nch", default=False, help="Use cache for boost repeat calculations [Warning if the files "
+@click.group(cls=CustomGroup, command_examples=command_examples_fast_sync_cli)
+@click_extra.option("--caching/--no-caching", "-ch/-Nch", default=False, help="Use cache for boost repeat calculations [Warning if the files "
                                                  "have the same name and different contents, "
                                                  "caching should not be used in this case]")
-@click.option("--group/--no-group", "-g/-Ng", default=False, help="Group files by folders [Affects the output format]")
-@click.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name [Affects the output format]")
-@click.option("--num-processes", "-np", default=2, type=click.IntRange(1, number_of_usable_cpus()), help="Number of dedicated processes for file processing. Change only at your own risk.")
-@click.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
-@click.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
+@click_extra.option("--group/--no-group", "-g/-Ng", default=False, help="Group files by folders [Affects the output format]")
+@click_extra.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name [Affects the output format]")
+@click_extra.option("--num-processes", "-np", default=2, type=click_extra.IntRange(1, number_of_usable_cpus()), help="Number of dedicated processes for file processing. Change only at your own risk.")
+@click_extra.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
+@click_extra.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
+@click_extra.color_option
 @config_option(strict=True, roaming=False)
-@click.pass_context
+@click_extra.no_config_option
+@click_extra.pass_context
 def fast_sync_cli(
-    ctx: Context,
+    ctx: ExtraContext,
     caching: bool,
     group: bool,
     sort: bool,
@@ -39,8 +42,8 @@ def fast_sync_cli(
     extensions: tuple[str, ...],
     folders: tuple,
 ):
-    click.echo("---" * 30)
-    click.secho("Fast sync started", fg="green", bold=True)
+    click_extra.echo("---" * 30)
+    click_extra.secho("Fast sync started", fg="green", bold=True)
 
     ctx.meta["output_formater"] = OutputFormater(
         grouped=group, sorted_=sort, num_processes=num_processes, caching=caching, extensions=extensions, folders=folders
