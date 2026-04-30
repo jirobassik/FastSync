@@ -20,15 +20,15 @@ class CliApplicationsObj(NamedTuple):
     duplicate_resolver: DuplicateResolver
 
 
-@click.group(cls=CustomGroup, command_examples=command_examples_fast_sync_cli)
-@click_extra.option("--caching/--no-caching", "-ch/-Nch", default=False, help="Use cache for boost repeat calculations [Warning if the files "
-                                                 "have the same name and different contents, "
-                                                 "caching should not be used in this case]")
-@click_extra.option("--group/--no-group", "-g/-Ng", default=False, help="Group files by folders [Affects the output format]")
-@click_extra.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name [Affects the output format]")
+@click.group(name="fs", cls=CustomGroup, command_examples=command_examples_fast_sync_cli)
+@click_extra.option("--caching/--no-caching", "-ch/-Nch", default=False, help="Use cache for boost repeat calculations (Warning if the files "
+                                                 "have the same name and different contents --caching, "
+                                                 "caching should not be used in this case).")
+@click_extra.option("--group/--no-group", "-g/-Ng", default=False, help="Group files by folders (Affects the output format).")
+@click_extra.option("--sort/--no-sort", "-s/-Ns", default=False, help="Sort files by name (Affects the output format).")
 @click_extra.option("--num-processes", "-np", default=2, type=click_extra.IntRange(1, number_of_usable_cpus()), help="Number of dedicated processes for file processing. Change only at your own risk.")
-@click_extra.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension")
-@click_extra.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder")
+@click_extra.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension. Example: `-e '.mp3'`.")
+@click_extra.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder.")
 @click_extra.color_option
 @config_option(strict=True, roaming=False)
 @click_extra.no_config_option

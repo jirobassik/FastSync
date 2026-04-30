@@ -6,12 +6,12 @@ from fast_sync.cli.utils.error.errors import ConfigFileCreationError
 from fast_sync.cli.utils.output_formaters.formaters import white_bolt_text
 
 
-@fast_sync_cli.group(name="config-manage", help="Manage config file")
+@fast_sync_cli.group(name="config-manage", help="Manage config file.")
 def config():
     pass
 
 
-@config.command(name="init", help="Init config file")
+@config.command(name="init", help="Init config file.")
 def init():
     try:
         write_config()
@@ -23,6 +23,6 @@ def init():
         raise click.exceptions.FileError(filename=e.filename, hint=e.message)
 
 
-@config.command(name="open", help="Open config file")
+@config.command(name="open", help="Open config file.")
 def open_():
     click.launch(path_to_config().as_uri())

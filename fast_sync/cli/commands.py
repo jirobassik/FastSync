@@ -5,7 +5,7 @@ from fast_sync.cli.main import fast_sync_cli
 
 @fast_sync_cli.command(
     name="view-help",
-    help="Show help for a specific command. Example: fs view-help missing left",
+    help="Show help for a specific command. Example: fs view-help missing left.",
 )
 @click.argument("commands", nargs=-1)
 @click.pass_context
