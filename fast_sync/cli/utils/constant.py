@@ -1,5 +1,7 @@
+from fast_sync.utils.constant import CLI_NAME
+
 CONFIG_DATA = {
-    "fast-sync-cli": {
+    CLI_NAME: {
         "caching": False,
         "group": True,
         "sort": False,

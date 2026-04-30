@@ -13,6 +13,7 @@ from fast_sync.utils.num_process import number_of_usable_cpus
 from .utils import CustomGroup
 from .utils.custom_config_option import config_option
 from .utils.custom_group.examples import command_examples_fast_sync_cli
+from .utils.constant import CLI_NAME
 
 
 class CliApplicationsObj(NamedTuple):
@@ -20,7 +21,7 @@ class CliApplicationsObj(NamedTuple):
     duplicate_resolver: DuplicateResolver
 
 
-@click.group(name="fs", cls=CustomGroup, command_examples=command_examples_fast_sync_cli)
+@click.group(name=CLI_NAME, cls=CustomGroup, command_examples=command_examples_fast_sync_cli)
 @click_extra.option("--caching/--no-caching", "-ch/-Nch", default=False, help="Use cache for boost repeat calculations (Warning if the files "
                                                  "have the same name and different contents --caching, "
                                                  "caching should not be used in this case).")

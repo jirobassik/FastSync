@@ -29,23 +29,12 @@ class OverloadFormatterMixin(Command):
         return super().get_help(ctx)
 
 
-class CustomGroup(ExtraGroup, OverloadFormatterMixin):
-    def __init__(
-        self,
-        command_examples: Optional[tuple[ExamplesCli, ...]] = None,
-        *args,
-        **kwargs: Any,
-    ):
-        super().__init__(*args, **kwargs)
-        self.command_examples = command_examples
-
-    def __call__(self, *args, **kwargs):
-        error = None
+class ErrorHandler:
+    def error_handler(self, command, error=None, *args, **kwargs):
         try:
-            super().__call__(*args, **kwargs)
+            command(*args, **kwargs)
         except PermissionError as e:
             error = PermissionDeniedError(e.filename, hint="Permission denied")
-
         except (FileNotFoundError, ValueError, TypeError) as e:
             if os.getenv("ENV_TYPE", "prod") == "debug":
                 raise e
@@ -67,6 +56,26 @@ class CustomGroup(ExtraGroup, OverloadFormatterMixin):
         if error is not None:
             self._show_error(error)
 
+    @staticmethod
+    def _show_error(error: ClickException):
+        error.show()
+        sys.exit(error.exit_code)
+
+
+class CustomGroup(ExtraGroup, OverloadFormatterMixin):
+    def __init__(
+        self,
+        command_examples: Optional[tuple[ExamplesCli, ...]] = None,
+        *args,
+        **kwargs: Any,
+    ):
+        super().__init__(*args, **kwargs)
+        self.command_examples = command_examples
+
+    def __call__(self, *args, **kwargs):
+        main_command = super().__call__
+        ErrorHandler().error_handler(main_command, *args, **kwargs)
+
     def format_help(self, ctx: ExtraContext, formatter: ExampleHelpFormatter):
         super().format_help(ctx, formatter)
         self.format_examples(formatter)
@@ -75,11 +84,6 @@ class CustomGroup(ExtraGroup, OverloadFormatterMixin):
         if self.command_examples is not None:
             with formatter.section("Examples"):
                 formatter.write_many_examples(*self.command_examples)
-
-    @staticmethod
-    def _show_error(error: ClickException):
-        error.show()
-        sys.exit(error.exit_code)
 
 
 class ExampleHelpFormatter(HelpExtraFormatter):
