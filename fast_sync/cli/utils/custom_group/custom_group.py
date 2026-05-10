@@ -1,9 +1,20 @@
+import os
 import sys
+from itertools import chain
+from typing import Any, Optional
 
 import click
-from click import ClickException, Context, FileError, HelpFormatter, wrap_text
+from click import Command, FileError, secho
+from click_extra import (
+    ClickException,
+    ExtraContext,
+    ExtraGroup,
+    HelpExtraFormatter,
+    Style,
+)
+from click_extra.colorize import highlight
 
-from fast_sync.cli.utils.custom_group.examples import examples, examples_cli
+from fast_sync.cli.utils.custom_group.examples import ExamplesCli
 from fast_sync.cli.utils.error.errors import PermissionDeniedError
 from fast_sync.utils.errors import (
     CacheFolderCreationError,
@@ -13,41 +24,22 @@ from fast_sync.utils.errors import (
 )
 
 
-class CustomHelpFormatter(HelpFormatter):
-    def write_many_examples(self, formatter: HelpFormatter, *args: examples_cli):
-        for examples_text in args:
-            self.write_example(formatter, examples_text.text, examples_text.explaining)
-
-    @staticmethod
-    def write_example(formatter: HelpFormatter, text, explaining=None):
-        formatter.write(
-            wrap_text(
-                text=text,
-                width=100,
-                initial_indent="  ",
-            )
-        )
-        formatter.write_paragraph()
-        if explaining is not None:
-            formatter.write(
-                wrap_text(
-                    text=explaining,
-                    width=100,
-                    initial_indent="     ",
-                )
-            )
-            formatter.write_paragraph()
+class OverloadFormatterMixin(Command):
+    def get_help(self: Command, ctx: click.Context) -> str:
+        ctx.formatter_class = ExampleHelpFormatter
+        return super().get_help(ctx)
 
 
-class CustomGroup(click.Group):
-    def __call__(self, *args, **kwargs):
-        error = None
+class ErrorHandler:
+    def error_handler(self, command, error=None, *args, **kwargs):
         try:
-            super().__call__(*args, **kwargs)
+            command(*args, **kwargs)
         except PermissionError as e:
             error = PermissionDeniedError(e.filename, hint="Permission denied")
         except (FileNotFoundError, ValueError, TypeError) as e:
-            error = click.exceptions.ClickException(e.__str__())
+            if os.getenv("ENV_TYPE", "prod") == "debug":
+                raise e
+            error = ClickException(e.__str__())
 
         except CacheFolderCreationError as e:
             error = PermissionDeniedError(
@@ -60,21 +52,101 @@ class CustomGroup(click.Group):
                 e.error_class.filename, hint="Permission denied"
             )
         except EqualResolverError as e:
-            click.secho(e, fg="green", bold=True)
+            secho(e, fg="green", bold=True)
 
         if error is not None:
-            self.show_error(error)
-
-    def format_help(self, ctx: Context, formatter: HelpFormatter) -> None:
-        super().format_help(ctx, formatter)
-        self.format_examples(ctx, formatter)
+            self._show_error(error)
 
     @staticmethod
-    def show_error(error: ClickException):
+    def _show_error(error: ClickException):
         error.show()
         sys.exit(error.exit_code)
 
-    @staticmethod
-    def format_examples(ctx: Context, formatter: HelpFormatter) -> None:
-        with formatter.section("EXAMPLES"):
-            CustomHelpFormatter().write_many_examples(formatter, *examples)
+
+class CustomGroup(ExtraGroup, OverloadFormatterMixin):
+    def __init__(
+        self,
+        command_examples: Optional[tuple[ExamplesCli, ...]] = None,
+        *args,
+        **kwargs: Any,
+    ):
+        super().__init__(*args, **kwargs)
+        self.command_examples = command_examples
+
+    def __call__(self, *args, **kwargs):
+        main_command = super().__call__
+        ErrorHandler().error_handler(main_command, *args, **kwargs)
+
+    def format_help(self, ctx: ExtraContext, formatter: ExampleHelpFormatter):
+        super().format_help(ctx, formatter)
+        self.format_examples(formatter)
+
+    def format_examples(self, formatter: ExampleHelpFormatter):
+        if self.command_examples is not None:
+            with formatter.section("Examples"):
+                formatter.write_many_examples(*self.command_examples)
+
+
+class ExampleHelpFormatter(HelpExtraFormatter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._additional_length = 10
+
+    def coloring_elements(self) -> dict[str, set[str]]:
+        cli_structure = get_cli_structure()
+        return {"invoked_command": self.keywords.cli_names, **cli_structure}
+
+    def write_many_examples(self, *args: ExamplesCli):
+        for examples_text in args:
+            self.write_example(examples_text.text, examples_text.explaining)
+
+    def write_example(self, text: str, explaining: Optional[str] = None):
+        if explaining is not None:
+            self._write_explaining(explaining)
+
+        self._write_command(text)
+        self.write_paragraph()
+
+    def _write_explaining(self, explaining: str):
+        styled_explaining = Style(bold=True, italic=True)(explaining)
+        self._change_additional_width(styled_explaining)
+
+        self.write_text(styled_explaining)
+
+    def _write_command(self, text: str):
+        for attr_to_color, patterns in self.coloring_elements().items():
+            text = highlight(
+                text, patterns=patterns, styling_func=getattr(self.theme, attr_to_color)
+            )
+        self._change_additional_width(text)
+        self.write_text(text)
+
+    def _change_additional_width(self, text: str):
+        self.width = len(text) + self._additional_length
+
+
+def get_cli_structure() -> dict[str, set[str]]:
+    from fast_sync.cli.main import fast_sync_cli
+
+    cli_structure = {"subcommand": set(), "option": set()}
+    # noinspection PyTypeChecker
+    ctx: click.Group = click.Context(fast_sync_cli).command
+
+    def _get_cli_structure(sub_ctx):
+        if isinstance(sub_ctx, click.Group):
+            for name, value in sub_ctx.commands.items():
+                cli_structure["subcommand"].add(name)
+                _get_cli_structure(value)
+
+        if isinstance(sub_ctx, click.Command):
+            params_opts = (
+                option.opts
+                for option in sub_ctx.params
+                if isinstance(option, click.Option)
+            )
+            chain_opts = chain.from_iterable(params_opts)
+            cli_structure["option"].update(chain_opts)
+
+        return cli_structure
+
+    return _get_cli_structure(ctx)

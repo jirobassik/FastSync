@@ -6,7 +6,7 @@ import click_extra
 from fast_sync.cli.main import CliApplicationsObj, fast_sync_cli
 
 
-@fast_sync_cli.group(help="Work with dublicates files")
+@fast_sync_cli.group(help="Work with dublicates files.")
 @click.option(
     "--folder",
     "-f",
@@ -19,7 +19,7 @@ def duplicates(obj: CliApplicationsObj, folder: Path):
 
 
 # noinspection PyUnresolvedReferences
-@duplicates.command("resolve", help="View and choose to delete dublicates files")
+@duplicates.command("resolve", help="View and choose to delete dublicates files.")
 @click.option(
     "--view-delete/--no-view-delete",
     "-v/-Nv",

@@ -83,7 +83,7 @@ class OutputFormater:
             )
 
         click.secho(
-            f"Caching is used: {white_bolt_text('Yes') if self.caching else white_bolt_text('No')}",
+            f"Caching: {white_bolt_text('Yes') if self.caching else white_bolt_text('No')}",
             fg="green",
         )
         self._filters_output()

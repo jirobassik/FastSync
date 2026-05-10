@@ -10,12 +10,12 @@ from fast_sync.hash_content_folder.hash_content_folder_caching.cache_folder_crea
 )
 
 
-@fast_sync_cli.group(name="cache", help="Manage cache folder")
+@fast_sync_cli.group(name="cache", help="Manage cache folder.")
 def cache():
     pass
 
 
-@cache.command(name="init", help="Init cache file")
+@cache.command(name="init", help="Init cache file.")
 def init():
     path_to_cache = default_path_to_cache()
     if not exist_file_cache(path_to_cache):
@@ -31,7 +31,7 @@ def init():
         )
 
 
-@cache.command(name="clear", help="Clear default cache file")
+@cache.command(name="clear", help="Clear default cache file.")
 def clear():
     path_to_cache = default_path_to_cache()
     if not exist_file_cache(path_to_cache):
@@ -46,6 +46,6 @@ def clear():
     )
 
 
-@cache.command(name="open", help="Open default cache folder")
+@cache.command(name="open", help="Open default cache folder.")
 def open_():
     click.launch(default_path_to_cache().as_uri())

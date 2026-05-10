@@ -43,22 +43,22 @@ class SyncFabric:
         # noinspection PyUnresolvedReferences
         @sync.command(
             self._direction,
-            short_help=f"Sync {self._direction} folder with {self._opposite_direction} folder",
+            short_help=f"Sync {self._direction} folder with {self._opposite_direction} folder.",
         )
         @click.option(
             "--view-missing",
             is_flag=True,
-            help="View missing files",
+            help="View missing files.",
         )
         @click.option(
             "--check-sync",
             flag_value="check_sync",
-            help="Check sync status",
+            help="Check sync result.",
         )
         @click.option(
             "--open-sync-folder",
             flag_value="open_sync_folder",
-            help=f"Open {self._direction} folder in file manager",
+            help=f"Open {self._direction} folder in file manager.",
         )
         @click.decorators.pass_meta_key("output_formater")
         @click.pass_obj
