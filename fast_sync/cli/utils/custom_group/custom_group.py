@@ -10,8 +10,9 @@ from click_extra import (
     ExtraContext,
     ExtraGroup,
     HelpExtraFormatter,
+    Style,
 )
-from click_extra.colorize import Style, highlight
+from click_extra.colorize import highlight
 
 from fast_sync.cli.utils.custom_group.examples import ExamplesCli
 from fast_sync.cli.utils.error.errors import PermissionDeniedError
@@ -93,7 +94,7 @@ class ExampleHelpFormatter(HelpExtraFormatter):
 
     def coloring_elements(self) -> dict[str, set[str]]:
         cli_structure = get_cli_structure()
-        return {"invoked_command": self.cli_names, **cli_structure}
+        return {"invoked_command": self.keywords.cli_names, **cli_structure}
 
     def write_many_examples(self, *args: ExamplesCli):
         for examples_text in args:

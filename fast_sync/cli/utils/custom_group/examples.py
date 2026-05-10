@@ -1,12 +1,12 @@
 from pathlib import Path
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 from fast_sync.utils.constant import CLI_NAME
 
 
 class ExamplesCli(NamedTuple):
     text: str
-    explaining: str
+    explaining: Optional[str] = None
 
 
 command_examples_fast_sync_cli = (
@@ -19,7 +19,7 @@ command_examples_fast_sync_cli = (
         "Sync files from Folder1 to Folder2 with caching (for boost repeat calculations). Only `mp3` extensions; exclude Folder3.",
     ),
     ExamplesCli(
-        f"{CLI_NAME} duplicates --folder {Path('/home/user/Folder1').as_posix()} resolve --view-delete",
+        f'{CLI_NAME} duplicates --folder "{Path("/home/user/Folder1").as_posix()}" resolve --view-delete',
         "Resolve duplicates files and view files that will be deleted.",
     ),
 )

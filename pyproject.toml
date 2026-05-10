@@ -8,10 +8,10 @@ license = { file = "LICENSE.md" }
 requires-python = ">=3.12"
 dependencies = [
     "click>=8.3.1",
-    "click-extra==7.4.0",
+    "click-extra>=7.15.0",
     "dependency-injector>=4.48.3",
     "diskcache>=5.6.3",
-    "extra-platforms==7.0.0",
+    "extra-platforms>=12.0.3",
     "inquirer>=3.4.1",
     "loguru>=0.7.3",
     "platformdirs>=4.9.2",
@@ -31,6 +31,7 @@ dev = [
     "memory-profiler>=0.61.0",
     "pytest>=9.0.2",
     "pytest-datafiles>=3.0.1",
+    "pytest-env>=1.6.0",
     "pytest-unordered>=0.7.0",
     "ruff>=0.14.14",
 ]
@@ -127,6 +128,7 @@ testpaths = ["tests"]
 pythonpath = ["fast_sync"]
 python_files = ["test_*.py", "*_test.py"]
 python_functions = ["test_*"]
+norecursedirs = ["test_folders"]
 addopts = [
     "-vv",
 ]

@@ -1,7 +1,9 @@
 from typing import NamedTuple
+
 import click
 import click_extra
-from click_extra import ExtraContext
+import click_extra.theme as th
+from click_extra import ConfigFormat, ExtraContext, register_theme
 
 from fast_sync.cli.utils.output_formaters.output_formater import OutputFormater
 from fast_sync.configures import hash_configure, reader_configure
@@ -11,10 +13,14 @@ from fast_sync.main import FastSync
 from fast_sync.utils.num_process import number_of_usable_cpus
 
 from .utils import CustomGroup
-from .utils.custom_config_option import config_option
-from .utils.custom_group.examples import command_examples_fast_sync_cli
 from .utils.constant import CLI_NAME
+from .utils.custom_group.custom_theme import neon, dark, light
+from .utils.custom_group.examples import command_examples_fast_sync_cli
 
+th.default_theme = dark()
+register_theme("neon", neon)
+register_theme("dark", dark)
+register_theme("light", light)
 
 class CliApplicationsObj(NamedTuple):
     fast_sync: FastSync
@@ -31,7 +37,16 @@ class CliApplicationsObj(NamedTuple):
 @click_extra.option("--extensions", "-e", default=(), multiple=True, help="Filter files by extension. Example: `-e '.mp3'`.")
 @click_extra.option("--folders", "-f", default=(), multiple=True, help="Exclude files based on folder.")
 @click_extra.color_option
-@config_option(strict=True, roaming=False)
+@click_extra.theme_option
+@click_extra.config_option(
+    strict=True,
+    roaming=False,
+    file_format_patterns={
+        ConfigFormat.TOML: ["*.toml"],
+        ConfigFormat.JSON: ["*.json"],
+    },
+)
+@click_extra.validate_config_option
 @click_extra.no_config_option
 @click_extra.pass_context
 def fast_sync_cli(
@@ -47,7 +62,12 @@ def fast_sync_cli(
     click_extra.secho("Fast sync started", fg="green", bold=True)
 
     ctx.meta["output_formater"] = OutputFormater(
-        grouped=group, sorted_=sort, num_processes=num_processes, caching=caching, extensions=extensions, folders=folders
+        grouped=group,
+        sorted_=sort,
+        num_processes=num_processes,
+        caching=caching,
+        extensions=extensions,
+        folders=folders,
     )
 
     # Define main container
