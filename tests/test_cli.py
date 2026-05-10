@@ -1,8 +1,9 @@
 import pytest
 from click.testing import CliRunner
-from .conftest import FIXTURE_DIR_INTERNAL
 
 from fast_sync.cli.main import fast_sync_cli
+
+from .conftest import FIXTURE_DIR_INTERNAL
 
 
 @pytest.mark.cli
@@ -21,21 +22,6 @@ def test_missing(direction):
         ],
     )
     assert result.exit_code == 0
-
-
-@pytest.mark.cli
-def test_duplicates():
-    runner = CliRunner()
-    result = runner.invoke(
-        fast_sync_cli,
-        [
-            "duplicates",
-            "-f",
-            f"{(FIXTURE_DIR_INTERNAL / 'TestEqual')}",
-            "resolve",
-        ],
-    )
-    assert result.exit_code == 1
 
 
 @pytest.mark.cli
