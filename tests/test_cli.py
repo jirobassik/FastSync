@@ -1,6 +1,6 @@
 import pytest
 from click.testing import CliRunner
-from conftest import FIXTURE_DIR_INTERNAL
+from .conftest import FIXTURE_DIR_INTERNAL
 
 from fast_sync.cli.main import fast_sync_cli
 
